@@ -7,8 +7,8 @@
 database.adapter        			= pdo_mysql
 database.utf8            			= true
 database.params.host     			= localhost
-database.params.username 			= root
-database.params.password 			= ''
+database.params.username 			= simple_invoices
+database.params.password 			= p2vnmVfAsby3MeBW
 database.params.dbname   			= simple_invoices
 database.params.port       			= 3306
 
@@ -24,7 +24,7 @@ export.pdf.rightmargin	 			= 15
 export.pdf.topmargin	 			= 15
 export.pdf.bottommargin 			= 15
 
-local.locale	    				= en_GB
+local.locale	    				= de_DE
 local.precision		    			= 2
 
 email.host 				            = localhost
@@ -36,15 +36,15 @@ email.secure      		    		=
 email.ack 				            = false
 email.use_local_sendmail            = false
 
-encryption.default.key 				= this_is_the_encryption_key_change_it
-nonce.key                           = this_should_be_random_and_secret_so_change_it
+encryption.default.key 				= 1c1R4TWmI1XlJUbaj7XLyhGMz8e9mhkvHbC4yF4o77Z2ZL96Bs
+nonce.key                           = D6XE5a7Zt76yJUaPQNW0k65Zs87JcWCEvQfOAR0d9ulakv9B4u
 nonce.timelimit                     = 3600
 
 version.name				    	= 2013.1.beta.8
  
 debug.level 				    	= All 
 debug.error_reporting				= E_ERROR
-phpSettings.date.timezone 			= Europe/London
+phpSettings.date.timezone 			= Europe/Berlin
 phpSettings.display_startup_errors  = 1
 phpSettings.display_errors 			= 1
 phpSettings.log_errors   			= 0

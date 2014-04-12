@@ -429,7 +429,8 @@ function getTaxTypes() {
 	
 	$types=  array(
                                 '%' => '%',
-                                '$' => '$'
+                                '$' => '$',
+                                '€' => '€'
 	);
 	return $types;
 }
