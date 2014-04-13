@@ -4,3 +4,4 @@ custom.config.ini
 zend_cache---*
 *.log
 tmp/cache/*
+library/HTMLPurifier/standalone/HTMLPurifier/DefinitionCache
