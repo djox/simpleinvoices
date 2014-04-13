@@ -1,487 +1,307 @@
-<html>
-<head>
+<!doctype html>  
+<html>  
+<head>  
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="{$css|urlsafe}" media="all">
 <title>{$preference.pref_inv_wording|htmlsafe} {$LANG.number_short}: {$invoice.index_id|htmlsafe}</title>
 </head>
-<body>
-<br />
-<div id="container">
+
+<div id="wrapper">
 	<div id="header">
+		<img id="logo" src="{$logo|urlsafe}">
+		<h1 id="invoice_title">{$preference.pref_inv_heading|htmlsafe}</h1>
+<!-- Summary -->
+		<div id="invoice_summary">
+			<h2>{$preference.pref_inv_wording|htmlsafe} {$LANG.summary}</h2>
+			<ul>
+				<li class="invoice_number"><span class="desc">{$preference.pref_inv_wording|htmlsafe} {$LANG.number_short} </span><span class="number">{$invoice.index_id}</span></li>
+				<li class="date"><span class="desc">{$preference.pref_inv_wording|htmlsafe} {$LANG.date}: </span><span>{$invoice.date}</span></li>
+<!-- Show the Invoice Custom Fields if valid -->
+{if $invoice.custom_field1 != null}
+				<li class="custom_field custom_field1"><span class="desc">{$customFieldLabels.invoice_cf1|htmlsafe}: </span><span class="number">{$invoice.custom_field1|htmlsafe}</span></li>
+{/if}
+{if $invoice.custom_field2 != null}
+				<li class="custom_field custom_field2"><span class="desc">{$customFieldLabels.invoice_cf2|htmlsafe}: </span><span class="number">{$invoice.custom_field2|htmlsafe}</span></li>
+{/if}
+{if $invoice.custom_field3 != null}
+				<li class="custom_field custom_field3"><span class="desc">{$customFieldLabels.invoice_cf3|htmlsafe}: </span><span class="number">{$invoice.custom_field3|htmlsafe}</span></li>
+{/if}
+{if $invoice.custom_field4 != null}
+				<li class="custom_field custom_field4"><span class="desc">{$customFieldLabels.invoice_cf4|htmlsafe}: </span><span class="number">{$invoice.custom_field4|htmlsafe}</span></li>
+{/if}
+				<li class="total"><span class="desc">{$LANG.total}: </span><span class="number">{$invoice.total|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</span></li>
+				<li class="paid"><span class="desc">{$LANG.paid}: </span><span class="number">{$invoice.paid|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</span></li>
+				<li class="owing"><span class="desc">{$LANG.owing}: </span><span class="number">{$invoice.owing|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</span></li>
+			</ul>
+		</div>
 	</div>
 
-	<table width="100%" align="center">
-		<tr>
-			<td colspan="5"><img src="{$logo|urlsafe}" border="0" hspace="0" align="left"></td>
-			<th align="right"><span class="font1">{$preference.pref_inv_heading|htmlsafe}</span></th>
-		</tr>
-		<tr>
-			<td colspan="6" class="tbl1-top">&nbsp;</td>
-		</tr>
-	</table>
-	
-	<!-- Summary - start -->
+	<div id="invoice_body">
+<!-- Parties -->
+		<div id="invoice_parties">
+		<!-- Biller -->
+			<div id="invoice_biller" class="party">
+				<div id="info_biller" class="vcard">
+					<div class="info_mail">
+						<div class="org"><h3>{$biller.name|htmlsafe}</h3></div>
+						<div class="adr"><span class="desc">{$LANG.address}: </span>
+							<span class="adr-block">
+{if $biller.street_address != null}
+								<div class="street-address">{$biller.street_address|htmlsafe}</div>
+{/if}
+{if $biller.street_address2 != null }
+								<div class="street-address street-address2">{$biller.street_address2|htmlsafe}</div>
+{/if}
+{if $biller.zip_code != null }
+								<span class="postal-code">{$biller.zip_code|htmlsafe}&nbsp;</span> 
+{/if}
+{if $biller.city != null }
+								<span class="locality">{$biller.city|htmlsafe}</span><br/> 
+{/if}
+{if $biller.state != null }
+								<span class="region">{$biller.state|htmlsafe}</span><br/> 
+{/if}
+{if $biller.country != null }
+								<span class="country-name">{$biller.country|htmlsafe}</span>
+{/if}
+							</span>
+						</div>
+					</div>
+					<div class="info_other">
+{if $biller.phone != null }
+						<div class="tel"><span class="desc">{$LANG.phone}: </span><span class="number">{$biller.phone|htmlsafe}</span></div>
+{/if}
+{if $biller.fax != null }
+						<div class="fax"><span class="desc">{$LANG.fax}: </span><span class="number">{$biller.fax|htmlsafe}</span></div>
+{/if}
+{if $biller.mobile != null }
+						<div class="mobile"><span class="desc">{$LANG.mobile}: </span><span class="number">{$biller.mobile|htmlsafe}</span></div>
+{/if}
+{if $biller.email != null }
+						<div class="email"><span class="desc">{$LANG.email}: </span><span>{$biller.email|htmlsafe}</span></div>
+{/if}
+{if $biller.custom_field1 != null }
+						<div class="custom_field custom_field1"><span class="desc">{$customFieldLabels.biller_cf1}: </span><span>{$biller.custom_field1|htmlsafe}</span></div>
+{/if}
+{if $biller.custom_field2 != null }
+						<div class="custom_field custom_field2"><span class="desc">{$customFieldLabels.biller_cf2}: </span><span>{$biller.custom_field2|htmlsafe}</span></div>
+{/if}
+{if $biller.custom_field3 != null }
+						<div class="custom_field custom_field3"><span class="desc">{$customFieldLabels.biller_cf3}: </span><span>{$biller.custom_field3|htmlsafe}</span></div>
+{/if}
+{if $biller.custom_field4 != null }
+						<div class="custom_field custom_field4"><span class="desc">{$customFieldLabels.biller_cf4}: </span><span>{$biller.custom_field4|htmlsafe}</span></div>
+{/if}
+					</div>
+				</div>
+			</div>
 
-	<table class="right">
-		<tr>
-				<td class="col1 tbl1-bottom" colspan="4" ><b>{$preference.pref_inv_wording|htmlsafe} {$LANG.summary}</b></td>
-		</tr>
-		<tr>
-				<td class="">{$preference.pref_inv_wording|htmlsafe} {$LANG.number_short}:</td>
-				<td class="" align="right" colspan="3">{$invoice.index_id}</td>
-		</tr>
-		<tr>
-				<td nowrap class="">{$preference.pref_inv_wording|htmlsafe} {$LANG.date}:</td>
-				<td class="" align="right" colspan="3">{$invoice.date}</td>
-		</tr>
-	<!-- Show the Invoice Custom Fields if valid -->
-		{ if $invoice.custom_field1 != null}
-		<tr>
-				<td nowrap class="">{$customFieldLabels.invoice_cf1|htmlsafe}:</td>
-				<td class="" align="right" colspan="3">{$invoice.custom_field1|htmlsafe}</td>
-		</tr>
-		{/if}
-		{ if $invoice.custom_field2 != null}
-		<tr>
-				<td nowrap class="">{$customFieldLabels.invoice_cf2|htmlsafe}:</td>
-				<td class="" align="right"  colspan="3">{$invoice.custom_field2|htmlsafe}</td>
-		</tr>
-		{/if}
-		{ if $invoice.custom_field3 != null}
-		<tr>
-				<td nowrap class="">{$customFieldLabels.invoice_cf3|htmlsafe}:</td>
-				<td class="" align="right" colspan="3">{$invoice.custom_field3|htmlsafe}</td>
-		</tr>
-		{/if}
-		{ if $invoice.custom_field4 != null}
-		<tr>
-				<td nowrap class="">{$customFieldLabels.invoice_cf4|htmlsafe}:</td>
-				<td class="" align="right" colspan="3">{$invoice.custom_field4|htmlsafe}</td>
-		</tr>
-		{/if}
 
-		<tr>
-				<td class="" >{$LANG.total}: </td>
-				<td class="" align="right" colspan="3">{$invoice.total|siLocal_number}&nbsp;{$preference.pref_currency_sign}</td>
-		</tr>
-		<tr>
-				<td class="">{$LANG.paid}:</td>
-				<td class="" align="right" colspan="3" >{$invoice.paid|siLocal_number}&nbsp;{$preference.pref_currency_sign}</td>
-		</tr>
-		<tr>
-				<td nowrap class="">{$LANG.owing}:</td>
-				<td class="" align="right" colspan="3" >{$invoice.owing|siLocal_number}&nbsp;{$preference.pref_currency_sign}</td>
-		</tr>
 
-	</table>
-	<!-- Summary - end -->
-	
-	
-	<table class="left">
+		<!-- Customer -->
+			<div id="invoice_customer" class="party">
+				<div id="info_customer" class="vcard">
+					<div class="info_mail">
+						<div class="org"><h3>{$customer.name|htmlsafe}</h3></div>
+{if $customer.attention != null }
+						<h4 class="n attn">{$LANG.attention_short}: {$customer.attention|htmlsafe}</h4>
+{/if}
+						<div class="adr"><span class="desc">{$LANG.address}: </span>
+							<span class="adr-block">
+{if $customer.street_address != null }
+							<div class="street-address">{$customer.street_address|htmlsafe}</div>
+{/if}
+{if $customer.street_address2 != null}
+							<div class="street-address street-address2">{$customer.street_address2|htmlsafe}</div>
+{/if}
+{if $customer.zip_code != null }
+							<span class="postal-code">{$customer.zip_code|htmlsafe}&nbsp;</span>
+{/if}
+{if $customer.city != null }
+							<span class="locality">{$customer.city|htmlsafe}</span><br/>
+{/if}
+{if $customer.state != null }
+							<span class="region">{$customer.state|htmlsafe}</span><br/>
+{/if}
+{if $customer.country != null }
+							<span class="country-name">{$customer.country|htmlsafe}</span>
+{/if}
+							</span>
+						</div>
+					</div>
+					<div class="info_other">
+{if $customer.phone != null }
+						<div class="tel"><span class="desc">{$LANG.phone}: </span><span class="number">{$customer.phone|htmlsafe}</span></div>
+{/if}
+{if $customer.fax != null }
+						<div class="fax"><span class="desc">{$LANG.fax}: </span><span class="number">{$customer.fax|htmlsafe}</span></div>
+{/if}
+{if $customer.mobile != null }
+						<div class="mobile"><span class="desc">{$LANG.mobile}: </span><span class="number">{$customer.mobile|htmlsafe}</span></div>
+{/if}
+{if $customer.email != null }
+						<div class="email"><span class="desc">{$LANG.email}: </span><span>{$customer.email|htmlsafe}</span></div>
+{/if}
+{if $customer.custom_field1 != null }
+						<div class="custom_field custom_field1"><span class="desc">{$customFieldLabels.customer_cf1}: </span><span>{$customer.custom_field1|htmlsafe}</span></div>
+{/if}
+{if $customer.custom_field2 != null }
+						<div class="custom_field custom_field2"><span class="desc">{$customFieldLabels.customer_cf2}: </span><span>{$customer.custom_field2|htmlsafe}</span></div>
+{/if}
+{if $customer.custom_field3 != null }
+						<div class="custom_field custom_field3"><span class="desc">{$customFieldLabels.customer_cf3}: </span><span>{$customer.custom_field3|htmlsafe}</span></div>
+{/if}
+{if $customer.custom_field4 != null }
+						<div class="custom_field custom_field4"><span class="desc">{$customFieldLabels.customer_cf4}: </span><span>{$customer.custom_field4|htmlsafe}</span></div>
+{/if}
+					</div>
+				</div>
+			</div>
+		</div>
 
-    <!-- Biller section - start -->
-        <tr>
-                <td class="tbl1-bottom col1" border=1 cellpadding=2 cellspacing=1><b>{$LANG.biller}:</b></td>
-				<td class="col1 tbl1-bottom" border=1 cellpadding=2 cellspacing=1 colspan="3">{$biller.name|htmlsafe}</td>
-        </tr> 
 
-        {if $biller.street_address != null}
-		<tr>
-                <td class=''>{$LANG.address}:</td>
-				<td class='' align=left colspan="3">{$biller.street_address|htmlsafe}</td>
-		</tr>
-        {/if}
-        {if $biller.street_address2 != null }
-			{if $biller.street_address == null }
-		<tr>
-                <td class=''>{$LANG.address}:</td>
-				<td class='' align=left colspan="3">{$biller.street_address2|htmlsafe}</td>
-		</tr>   
-			{/if}
-			{if $biller.street_address != null }
-		<tr>
-                <td class=''></td>
-				<td class='' align=left colspan="3">{$biller.street_address2|htmlsafe}</td>
-        </tr>   
-			{/if}
-        {/if}
 
-		{merge_address field1=$biller.city field2=$biller.state field3=$biller.zip_code street1=$biller.street_address street2=$biller.street_address2 class1="" class2="" colspan="3"}
-
-		{if $biller.country != null }
-		<tr>
-				<td class=''></td>
-				<td class='' colspan="3">{$biller.country|htmlsafe}</td>
-		</tr>
-       	{/if}
-
-	{print_if_not_null label=$LANG.phone_short field=$biller.phone class1='' class2='' colspan="3"}
-	{print_if_not_null label=$LANG.fax field=$biller.fax class1='' class2='' colspan="3"}
-	{print_if_not_null label=$LANG.mobile_short field=$biller.mobile_phone class1='' class2='' colspan="3"}
-	{print_if_not_null label=$LANG.email field=$biller.email class1='' class2='' colspan="3"}
-	
-	{print_if_not_null label=$customFieldLabels.biller_cf1 field=$biller.custom_field1 class1='' class2='' colspan="3"}
-	{print_if_not_null label=$customFieldLabels.biller_cf2 field=$biller.custom_field2 class1='' class2='' colspan="3"}
-	{print_if_not_null label=$customFieldLabels.biller_cf3 field=$biller.custom_field3 class1='' class2='' colspan="3"}
-	{print_if_not_null label=$customFieldLabels.biller_cf4 field=$biller.custom_field4 class1='' class2='' colspan="3"}
-
-		<tr>
-				<td class="" colspan="4"> </td>
-		</tr>
-
-	<!-- Biller section - end -->
-
-		<tr>
-			<td colspan="4"><br /></td>
-		</tr>
-
-	<!-- Customer section - start -->
-	<tr>
-			<td class="tbl1-bottom col1" ><b>{$LANG.customer}:</b></td>
-			<td class="tbl1-bottom col1" colspan="3">{$customer.name|htmlsafe}</td>
-	</tr>
-
-        {if $customer.attention != null }
-    <tr>
-            <td class=''>{$LANG.attention_short}:</td>
-			<td align=left class='' colspan="3" >{$customer.attention|htmlsafe}</td>
-                </tr>
-       {/if}
-        {if $customer.street_address != null }
-    <tr >
-            <td class=''>{$LANG.address}:</td>
-			<td class='' align=left colspan="3">{$customer.street_address|htmlsafe}</td>
-    </tr>   
-        {/if}
-        {if $customer.street_address2 != null}
-                {if $customer.street_address == null}
-    <tr>
-            <td class=''>{$LANG.address}:</td>
-			<td class='' align=left colspan="3">{$customer.street_address2|htmlsafe}</td>
-    </tr>   
-                {/if}
-                {if $customer.street_address != null}
-    <tr>
-			<td class=''></td>
-			<td class='' align=left colspan="3">{$customer.street_address2|htmlsafe}</td>
-    </tr>   
-                {/if}
-        {/if}
-		
-		{merge_address field1=$customer.city field2=$customer.state field3=$customer.zip_code street1=$customer.street_address street2=$customer.street_addtess2 class1="" class2="" colspan="3"}
-
-         {if $customer.country != null}
-    <tr>
-            <td class=''></td>
-			<td class='' colspan="3">{$customer.country|htmlsafe}</td>
-    </tr>
-        {/if}
-
-	{print_if_not_null label=$LANG.phone_short field=$customer.phone class1='' class2='t' colspan="3"}
-	{print_if_not_null label=$LANG.fax field=$customer.fax class1='' class2='' colspan="3"}
-	{print_if_not_null label=$LANG.mobile_short field=$customer.mobile_phone class1='' class2='' colspan="3"}
-	{print_if_not_null label=$LANG.email field=$customer.email class1='' class2='' colspan="3"}
-	
-	{print_if_not_null label=$customFieldLabels.customer_cf1 field=$customer.custom_field1 class1='' class2='' colspan="3"}
-	{print_if_not_null label=$customFieldLabels.customer_cf2 field=$customer.custom_field2 class1='' class2='' colspan="3"}
-	{print_if_not_null label=$customFieldLabels.customer_cf3 field=$customer.custom_field3 class1='' class2='' colspan="3"}
-	{print_if_not_null label=$customFieldLabels.customer_cf4 field=$customer.custom_field4 class1='' class2='' colspan="3"}
-
-		<tr>
-			<td class="" colspan="4"></td>
-		</tr>
-	</table>
-
-	<!-- Customer section - end -->
-
-	<table class="left" width="100%">
-		<tr>
-			<td colspan="6"><br /></td>
-		</tr>
-
-	{if $invoice.type_id == 2 }
+<!-- Itemization -->
+		<div id="invoice_itemization">
+			<h2>Itemization</h2>
+			<table>
+				<thead>
 					<tr>
-				<td class="tbl1-bottom col1"><b>{$LANG.quantity_short}</b></td>
-				<td class="tbl1-bottom col1" colspan="3"><b>{$LANG.item}</b></td>
-				<td class="tbl1-bottom col1" align="right"><b>{$LANG.unit_cost}</b></td>
-				<td class="tbl1-bottom col1" align="right"><b>{$LANG.price}</b></td>
-			</tr>
-			
-				{foreach from=$invoiceItems item=invoiceItem}
-
-			<tr class="" >
-				<td class="">{$invoiceItem.quantity|siLocal_number_trim}</td>
-				<td class="" colspan="3">{$invoiceItem.product.description|htmlsafe}</td>
-				<td class="" align="right">{$invoiceItem.unit_price|siLocal_number}&nbsp;{$preference.pref_currency_sign}</td>
-				<td class="" align="right">{$invoiceItem.gross_total|siLocal_number}&nbsp;{$preference.pref_currency_sign}</td>
-			</tr>
-					{if $invoiceItem.attribute != null}
-                            <tr class="si_product_attribute">
-                                <td></td>
-                                <td>
-                                <table>
-                                    <tr class="si_product_attribute">
-                                    {foreach from=$invoiceItem.attribute_json key=k item=v}
-                                       {if $v.visible ==true }
-                                        <td class="si_product_attribute">
-                                            {if $v.type == 'decimal'}
-                                              {$v.name}: {$v.value|siLocal_number}&nbsp;{$preference.pref_currency_sign};
-                                             {else if $v.value !=''}
-                                               {$v.name}: {$v.value};
-                                            {/if}
-                                        </td>
-                                        {/if}
-                                    {/foreach}
-                                    </tr>
-                                </table>
-                                </td>
-                            </tr>
-					{/if}
-			{if $invoiceItem.description != null}
-			<tr class="">
-				<td class=""></td>
-				<td class="" colspan="5">{$LANG.description}: {$invoiceItem.description|htmlsafe}</td>
-			</tr>
-			{/if}
-			
-            <tr class="tbl1-bottom">
-                <td class=""></td>
-				<td class="" colspan="5">
-					<table width="100%">
-						<tr>
-
-					{inv_itemised_cf label=$customFieldLabels.product_cf1 field=$invoiceItem.product.custom_field1}
-					{do_tr number=1 class="blank-class"}
-					{inv_itemised_cf label=$customFieldLabels.product_cf2 field=$invoiceItem.product.custom_field2}
-					{do_tr number=2 class="blank-class"}
-					{inv_itemised_cf label=$customFieldLabels.product_cf3 field=$invoiceItem.product.custom_field3}
-					{do_tr number=3 class="blank-class"}
-					{inv_itemised_cf label=$customFieldLabels.product_cf4 field=$invoiceItem.product.custom_field4}
-					{do_tr number=4 class="blank-class"}
- 
-						</tr>
-					</table>
-                </td>
-            </tr>
-             	{/foreach}
-	{/if}
-
-	{if $invoice.type_id == 3 }
-			<tr class="tbl1-bottom col1">
-				<td class="tbl1-bottom "><b>{$LANG.quantity_short}</b></td>
-				<td colspan="3" class=" tbl1-bottom"><b>{$LANG.item}</b></td>
-				<td align="right" class=" tbl1-bottom"><b>{$LANG.unit_cost}</b></td>
-				<td align="right" class=" tbl1-bottom  "><b>{$LANG.price}</b></td>
-			</tr>
-		
-			{foreach from=$invoiceItems item=invoiceItem}
-	
-			<tr class=" ">
-				<td class="" >{$invoiceItem.quantity|siLocal_number}</td>
-				<td>{$invoiceItem.product.description|htmlsafe}</td>
-				<td class="" colspan="4"></td>
-			</tr>
-			
-						
-            <tr>       
-                <td class=""></td>
-				<td class="" colspan="5">
-                    <table width="100%">
-                        <tr>
-
-					{inv_itemised_cf label=$customFieldLabels.product_cf1 field=$invoiceItem.product.custom_field1}
-					{do_tr number=1 class="blank-class"}
-					{inv_itemised_cf label=$customFieldLabels.product_cf2 field=$invoiceItem.product.custom_field2}
-					{do_tr number=2 class="blank-class"}
-					{inv_itemised_cf label=$customFieldLabels.product_cf3 field=$invoiceItem.product.custom_field3}
-					{do_tr number=3 class="blank-class"}
-					{inv_itemised_cf label=$customFieldLabels.product_cf4 field=$invoiceItem.product.custom_field4}
-					{do_tr number=4 class="blank-class"}
-
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-	
-			<tr class="">
-				<td class=""></td>
-				<td class="" colspan="5"><i>{$LANG.description}: </i>{$invoiceItem.description|htmlsafe}</td>
-			</tr>
-			<tr class="">
-				<td class="" ></td>
-				<td class=""></td>
-				<td class=""></td>
-				<td class=""></td>
-				<td align="right" class="">{$invoiceItem.unit_price|siLocal_number}&nbsp;{$preference.pref_currency_sign}</td>
-				<td align="right" class="">{$invoiceItem.total|siLocal_number}&nbsp;{$preference.pref_currency_sign}</td>
-			</tr>
-			{/foreach}
-	{/if}
-	
-	{if $invoice.type_id == 1 }
-		    <table class="left" width="100%">
-
-                <tr class="col1" >
-                    <td class="tbl1-bottom col1" colspan="6"><b>{$LANG.description}</b></td>
-                </tr>
-                
-          {foreach from=$invoiceItems item= invoiceItem}
-
-			    <tr class="">
-                    <td class="t" colspan="6">{$invoiceItem.description|outhtml}</td>
-                </tr>
-
-		{/foreach}
-	{/if}
-
-{if ($invoice.type_id == 2 && $invoice.note != "") || ($invoice.type_id == 3 && $invoice.note != "" )  }
-
-		<tr>
-			<td class="" colspan="6"><br /></td>
-		</tr>
-		<tr>
-			<td class="" colspan="6" align="left"><b>{$LANG.notes}:</b></td>
-		</tr>
-		<tr>
-			<td class="" colspan="6">{$invoice.note|outhtml}</td>
-		</tr>
-
+{if ($invoice.type_id == 2) || ($invoice.type_id == 3) }
+						<th class="qty">{$LANG.quantity_short}</th>
+						<th class="item">{$LANG.item}</th>
+						<th class="price-unit">{$LANG.unit_cost}</th>
+						<th class="price-item">{$LANG.price}</th>
+{/if}
+{if $invoice.type_id == 1 }
+						<th class="description" colspan="4">{$LANG.description}</th>
+{/if}
+					</tr>
+				</thead>
+				
+				<tfoot></tfoot>
+				
+				<tbody>
+{* Invoice Type 2 or Type 3 - Itemized, formerly Type 2 and 3 were the same info merely displayed in slightly different order *}
+{if ($invoice.type_id == 2) || ($invoice.type_id == 3) }
+	{foreach from=$invoiceItems item=invoiceItem}
+					<tr>
+						<td class="qty number">{$invoiceItem.quantity|siLocal_number_trim}</td>
+						<td class="item">
+							<span class="item-title">{$invoiceItem.product.description|htmlsafe}</span>
+		{if $invoiceItem.description != null}
+							<span class="item-detail"><span>{$invoiceItem.description|htmlsafe}</span></span>
+		{/if}
+		{if $invoiceItem.product.custom_field1 != null}
+							<span class="item-custom-field"><span class="desc">{$customFieldLabels.product_cf1}: </span><span>{$invoiceItem.product.custom_field1|htmlsafe}</span></span>
+		{/if}
+		{if $invoiceItem.product.custom_field2 != null}
+							<span class="item-custom-field"><span class="desc">{$customFieldLabels.product_cf2}: </span><span>{$invoiceItem.product.custom_field2|htmlsafe}</span></span>
+		{/if}
+		{if $invoiceItem.product.custom_field3 != null}
+							<span class="item-custom-field"><span class="desc">{$customFieldLabels.product_cf3}: </span><span>{$invoiceItem.product.custom_field3|htmlsafe}</span></span>
+		{/if}
+		{if $invoiceItem.product.custom_field4 != null}
+							<span class="item-custom-field"><span class="desc">{$customFieldLabels.product_cf4}: </span><span>{$invoiceItem.product.custom_field4|htmlsafe}</span></span>
+		{/if}
+						</td>
+						<td class="price-unit number">{$invoiceItem.unit_price|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</td>
+						<td class="price-item number">{$invoiceItem.gross_total|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</td>
+					</tr>
+	{/foreach}
 {/if}
 
-	<tr class="">
-		<td class="" colspan="6" ><br /></td>
-	</tr>
 
-    {* tax section - start *}
-	{if $invoice_number_of_taxes > 0}
-	<tr>
-        <td colspan="2"></td>
-		<td colspan="3" align="right">{$LANG.sub_total}&nbsp;</td>
-		<td colspan="1" align="right">{if $invoice_number_of_taxes > 1}<u>{/if}{$invoice.gross|siLocal_number}&nbsp;{$preference.pref_currency_sign}{if $invoice_number_of_taxes > 1}</u>{/if}</td>
-    </tr>
-    {/if}
-	{if $invoice_number_of_taxes > 1 }
-	        <tr>
-        	        <td colspan="6"><br /></td>
-	        </tr>
-    {/if}
-    {section name=line start=0 loop=$invoice.tax_grouped step=1}
-    	{if ($invoice.tax_grouped[line].tax_amount != "0") }
-    	
-    	<tr>
-	        <td colspan="2"></td>
-			<td colspan="3" align="right">{$invoice.tax_grouped[line].tax_name|htmlsafe}&nbsp;</td>
-			<td colspan="1" align="right">{$invoice.tax_grouped[line].tax_amount|siLocal_number}&nbsp;{$preference.pref_currency_sign}</td>
-	    </tr>
-	    {/if}
-	    
-	{/section}
-	{if $invoice_number_of_taxes > 1}
-	<tr>
-        <td colspan="2"></td>
-		<td colspan="3" align="right">{$LANG.tax_total}&nbsp;</td>
-		<td colspan="1" align="right"><u>{$invoice.total_tax|siLocal_number}&nbsp;{$preference.pref_currency_sign}</u></td>
-    </tr>
-    {/if}
-	{if $invoice_number_of_taxes > 1}
-	<tr>
-		<td colspan="6"><br /></td>
-	</tr>
-    {/if}
-    <tr>
-        <td colspan="2"></td>
-		<td colspan="3" align="right"><b>{$preference.pref_inv_wording|htmlsafe} {$LANG.amount}&nbsp;</b></td>
-		<td colspan="1" align="right"><span class="double_underline"><u>{$invoice.total|siLocal_number}&nbsp;{$preference.pref_currency_sign}</u></span></td>
-    </tr>
-    {* tax section - end *}
-{*
-		<tr>
-			<td class="" colspan="2"></td>
-			<td align="right" colspan="3">{$LANG.sub_total}</td>
-			<td align="right" class="">{$invoice.gross|siLocal_number}&nbsp;{$preference.pref_currency_sign}</td>
-		</tr>
-	
-	
-    {section name=line start=0 loop=$invoice.tax_grouped step=1}
+{* Invoice Type 1 - Total, No Itemization *}
+{if $invoice.type_id == 1 }
+		{foreach from=$invoiceItems item=invoiceItem}
+					<tr>
+						<td class="description" colspan="4">{$invoiceItem.description|outhtml}</td>
+					</tr>
+		{/foreach}
+{/if}
+				</tbody>
+			</table>
+		</div>
 
-		{if ($invoice.tax_grouped[line].tax_amount != "0") }  
-		
-		<tr class=''>
-	        <td colspan="2"></td>
-			<td colspan="3" align="right">{$invoice.tax_grouped[line].tax_name|htmlsafe}</td>
-			<td colspan="1" align="right">{$invoice.tax_grouped[line].tax_amount|siLocal_number}&nbsp;{$preference.pref_currency_sign}</td>
-	    </tr>
-	    
-	    {/if}
-	    
-	{/section}
-	
-	<tr class=''>
-        <td colspan="2"></td>
-		<td colspan="3" align="right">{$LANG.tax_total}</td>
-		<td colspan="1" align="right"><u>{$invoice.total_tax|siLocal_number}&nbsp;{$preference.pref_currency_sign}</u></td>
-    </tr>
-	
-	
-	<tr class="">
-		<td class="" colspan="6" ><br /></td>
-	</tr>
-	<tr class="">
-		<td class="" colspan="2"></td>
-		<td class="" align="right" colspan="3"><b>{$preference.pref_inv_wording|htmlsafe} {$LANG.amount}</b></td>
-		<td  class="" align="right"><span class="double_underline" >{$invoice.total|siLocal_number}&nbsp;{$preference.pref_currency_sign}</span></td>
-	</tr>
-*}
-	<tr>
-		<td colspan="6"><br /><br /></td>
-	</tr>
-	
-	<!-- invoice details section - start -->
 
-	<tr>
-		<td class="tbl1-bottom col1" colspan="6"><b>{$preference.pref_inv_detail_heading|htmlsafe}</b></td>
-	</tr>
-	<tr>
-		<td class="" colspan="6"><i>{$preference.pref_inv_detail_line|outhtml}</i></td>
-	</tr>
-	<tr>
-		<td class="" colspan="6">{$preference.pref_inv_payment_method|htmlsafe}</td>
-	</tr>
-	<tr>
-		<td class="" colspan="6">{$preference.pref_inv_payment_line1_name|htmlsafe} {$preference.pref_inv_payment_line1_value|htmlsafe}</td>
-	</tr>
-	<tr>
-		<td class="" colspan="6">{$preference.pref_inv_payment_line2_name|htmlsafe} {$preference.pref_inv_payment_line2_value|htmlsafe}</td>
-	</tr>
-	<tr>
-		<td><br /></td>
-	</tr>
-	<tr>
-		<td colspan="6"><div style="font-size:8pt;" align="center">{$biller.footer|outhtml}</div></td>
-	</tr>
-	<tr>
-		<td>
-			{online_payment_link 
+
+<!-- Totals -->
+		<div id="invoice_totals">
+			<h2>{$LANG.totals}</h2>
+			<table>
+{if $invoice_number_of_taxes > 0 }
+				<tr class="subtotal{if $invoice_number_of_taxes > 1} underline{/if}">
+					<td class="desc">{$LANG.sub_total}:</td>
+					<td class="price"><span class="number">{$invoice.gross|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</span></td>
+				</tr>
+{/if}
+{section name=line start=0 loop=$invoice.tax_grouped step=1}
+	{if ($invoice.tax_grouped[line].tax_amount != "0") }
+				<tr class="tax">
+					<td class="desc">{$invoice.tax_grouped[line].tax_name|htmlsafe}:</td>
+					<td class="price"><span class="number">{$invoice.tax_grouped[line].tax_amount|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</span></td>
+				</tr>
+	{/if}
+{/section}
+{if $invoice_number_of_taxes > 1}
+				<tr class="tax tax-total">
+					<td class="desc">{$LANG.tax_total}:</td>
+					<td class="price"><span class="number">{$invoice.total_tax|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</span></td>
+				</tr>
+{/if}
+				<tr class="total">
+					<td class="desc">{$preference.pref_inv_wording|htmlsafe} {$LANG.amount}:</td>
+					<td class="price"><strong class="number">{$invoice.total|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</strong></td>
+				</tr>
+			</table>
+		</div>
+
+
+{if ($invoice.type_id == 2 && $invoice.note != "") || ($invoice.type_id == 3 && $invoice.note != "") }
+<!-- Notes -->
+		<div id="invoice_notes">
+			<h2>{$LANG.notes}</h2>
+			<p>{$invoice.note|outhtml}</p>
+		</div>
+{/if}
+
+
+<!-- Details -->
+		<div id="invoice_details">
+			<h2>{$preference.pref_inv_detail_heading|htmlsafe}</h2>
+			<p>{$preference.pref_inv_detail_line|outhtml}</p>
+			
+			<ul id="payments">
+{if $preference.pref_inv_payment_method != ""}
+				<li>{$preference.pref_inv_payment_method|htmlsafe}
+	{if $preference.pref_inv_payment_line1_name != ""}
+					<ul>
+						<li><span class="desc">{$preference.pref_inv_payment_line1_name|htmlsafe}: </span><span>{$preference.pref_inv_payment_line1_value|htmlsafe}</span></li>
+		{if $preference.pref_inv_payment_line2_name != ""}
+						<li><span class="desc">{$preference.pref_inv_payment_line2_name|htmlsafe}: </span><span>{$preference.pref_inv_payment_line2_value|htmlsafe}</span></li>
+		{/if}
+					</ul>
+	{/if}
+				</li>
+{/if}
+{if $preference.include_online_payment == "paypal"}
+				<li>PayPal {online_payment_link 
 				type=$preference.include_online_payment business=$biller.paypal_business_name 
 				item_name=$invoice.index_name invoice=$invoice.id 
-				amount=$invoice.owing currency_code=$preference.currency_code
+				amount=$invoice.total currency_code=$preference.currency_code
 				link_wording=$LANG.paypal_link
 				notify_url=$biller.paypal_notify_url return_url=$biller.paypal_return_url
-				domain_id = $invoice.domain_id include_image=true
-                api_id = $biller.paymentsgateway_api_id
-                customer = $customer
-			}
+				domain_id = $invoice.domain_id include_image=true}</li>
+{/if}
+{if $preference.include_online_payment == "eway_merchant_xml"}
+				<li>eWay Merchant</li>
+{/if}
+			</ul>
+		</div>
+	</div>
 
-		</td>
-	</tr>
-
-	<!-- invoice details section - end -->
-
-</table>
-
-<div id="footer"></div>
-
+	<div id="footer">{$biller.footer|outhtml}</div>
 </div>
-
 </body>
 </html>
