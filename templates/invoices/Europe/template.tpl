@@ -1,4 +1,4 @@
-<!doctype html>  
+<!DOCTYPE html>  
 <html>  
 <head>  
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -8,94 +8,40 @@
 
 <div id="wrapper">
 	<div id="header">
-		<img id="logo" src="{$logo|urlsafe}">
-		<h1 id="invoice_title">{$preference.pref_inv_heading|htmlsafe}</h1>
-<!-- Summary -->
-		<div id="invoice_summary">
-			<h2>{$preference.pref_inv_wording|htmlsafe} {$LANG.summary}</h2>
-			<ul>
-				<li class="invoice_number"><span class="desc">{$preference.pref_inv_wording|htmlsafe} {$LANG.number_short} </span><span class="number">{$invoice.index_id}</span></li>
-				<li class="date"><span class="desc">{$preference.pref_inv_wording|htmlsafe} {$LANG.date}: </span><span>{$invoice.date}</span></li>
-<!-- Show the Invoice Custom Fields if valid -->
-{if $invoice.custom_field1 != null}
-				<li class="custom_field custom_field1"><span class="desc">{$customFieldLabels.invoice_cf1|htmlsafe}: </span><span class="number">{$invoice.custom_field1|htmlsafe}</span></li>
+	
+		<!-- Biller -->
+		<div id="biller_heading">
+			<img id="logo" src="{$logo|urlsafe}">
+			<div id="biller_address">
+{if $biller.custom_field1 != null }
+				<div class="custom_field custom_field1"><span class="desc">{$customFieldLabels.biller_cf1}: </span><span>{$biller.custom_field1|htmlsafe}</span></div>
 {/if}
-{if $invoice.custom_field2 != null}
-				<li class="custom_field custom_field2"><span class="desc">{$customFieldLabels.invoice_cf2|htmlsafe}: </span><span class="number">{$invoice.custom_field2|htmlsafe}</span></li>
+				<div class="org"><span>{$biller.name|htmlsafe}</span></div>
+{if $biller.street_address != null}
+				<span class="street-address">{$biller.street_address|htmlsafe}&nbsp;&bull;&nbsp;</span>
 {/if}
-{if $invoice.custom_field3 != null}
-				<li class="custom_field custom_field3"><span class="desc">{$customFieldLabels.invoice_cf3|htmlsafe}: </span><span class="number">{$invoice.custom_field3|htmlsafe}</span></li>
+{if $biller.street_address2 != null }
+				<span class="street-address street-address2">{$biller.street_address2|htmlsafe}&nbsp;;&bull;&nbsp;</span>
 {/if}
-{if $invoice.custom_field4 != null}
-				<li class="custom_field custom_field4"><span class="desc">{$customFieldLabels.invoice_cf4|htmlsafe}: </span><span class="number">{$invoice.custom_field4|htmlsafe}</span></li>
+{if $biller.zip_code != null }
+				<span class="postal-code">{$biller.zip_code|htmlsafe}&nbsp;</span> 
 {/if}
-				<li class="total"><span class="desc">{$LANG.total}: </span><span class="number">{$invoice.total|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</span></li>
-				<li class="paid"><span class="desc">{$LANG.paid}: </span><span class="number">{$invoice.paid|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</span></li>
-				<li class="owing"><span class="desc">{$LANG.owing}: </span><span class="number">{$invoice.owing|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</span></li>
-			</ul>
+{if $biller.city != null }
+				<span class="locality">{$biller.city|htmlsafe}&nbsp;&bull;&nbsp;</span>
+{/if}
+{if $biller.phone != null }
+				<span class="tel"><span class="desc">{$LANG.phone}: </span><span class="number">{$biller.phone|htmlsafe}</span></span>
+{/if}
+			</div>
 		</div>
+
+
+		
 	</div>
 
 	<div id="invoice_body">
 <!-- Parties -->
 		<div id="invoice_parties">
-		<!-- Biller -->
-			<div id="invoice_biller" class="party">
-				<div id="info_biller" class="vcard">
-					<div class="info_mail">
-						<div class="org"><h3>{$biller.name|htmlsafe}</h3></div>
-						<div class="adr"><span class="desc">{$LANG.address}: </span>
-							<span class="adr-block">
-{if $biller.street_address != null}
-								<div class="street-address">{$biller.street_address|htmlsafe}</div>
-{/if}
-{if $biller.street_address2 != null }
-								<div class="street-address street-address2">{$biller.street_address2|htmlsafe}</div>
-{/if}
-{if $biller.zip_code != null }
-								<span class="postal-code">{$biller.zip_code|htmlsafe}&nbsp;</span> 
-{/if}
-{if $biller.city != null }
-								<span class="locality">{$biller.city|htmlsafe}</span><br/> 
-{/if}
-{if $biller.state != null }
-								<span class="region">{$biller.state|htmlsafe}</span><br/> 
-{/if}
-{if $biller.country != null }
-								<span class="country-name">{$biller.country|htmlsafe}</span>
-{/if}
-							</span>
-						</div>
-					</div>
-					<div class="info_other">
-{if $biller.phone != null }
-						<div class="tel"><span class="desc">{$LANG.phone}: </span><span class="number">{$biller.phone|htmlsafe}</span></div>
-{/if}
-{if $biller.fax != null }
-						<div class="fax"><span class="desc">{$LANG.fax}: </span><span class="number">{$biller.fax|htmlsafe}</span></div>
-{/if}
-{if $biller.mobile != null }
-						<div class="mobile"><span class="desc">{$LANG.mobile}: </span><span class="number">{$biller.mobile|htmlsafe}</span></div>
-{/if}
-{if $biller.email != null }
-						<div class="email"><span class="desc">{$LANG.email}: </span><span>{$biller.email|htmlsafe}</span></div>
-{/if}
-{if $biller.custom_field1 != null }
-						<div class="custom_field custom_field1"><span class="desc">{$customFieldLabels.biller_cf1}: </span><span>{$biller.custom_field1|htmlsafe}</span></div>
-{/if}
-{if $biller.custom_field2 != null }
-						<div class="custom_field custom_field2"><span class="desc">{$customFieldLabels.biller_cf2}: </span><span>{$biller.custom_field2|htmlsafe}</span></div>
-{/if}
-{if $biller.custom_field3 != null }
-						<div class="custom_field custom_field3"><span class="desc">{$customFieldLabels.biller_cf3}: </span><span>{$biller.custom_field3|htmlsafe}</span></div>
-{/if}
-{if $biller.custom_field4 != null }
-						<div class="custom_field custom_field4"><span class="desc">{$customFieldLabels.biller_cf4}: </span><span>{$biller.custom_field4|htmlsafe}</span></div>
-{/if}
-					</div>
-				</div>
-			</div>
-
 
 
 		<!-- Customer -->
@@ -157,7 +103,39 @@
 					</div>
 				</div>
 			</div>
+			
+						
+<!-- Summary -->
+			<div id="invoice_summary_block">
+				<h1 id="invoice_title">{$preference.pref_inv_heading|htmlsafe}</h1>
+		
+				<div id="invoice_summary">
+					<h2>{$preference.pref_inv_wording|htmlsafe} {$LANG.summary}</h2>
+					<ul>
+						<li class="invoice_number"><span class="desc">{$preference.pref_inv_wording|htmlsafe} {$LANG.number_short} </span><span class="number">{$invoice.index_id}</span></li>
+						<li class="date"><span class="desc">{$preference.pref_inv_wording|htmlsafe} {$LANG.date}: </span><span>{$invoice.date}</span></li>
+		<!-- Show the Invoice Custom Fields if valid -->
+		{if $invoice.custom_field1 != null}
+						<li class="custom_field custom_field1"><span class="desc">{$customFieldLabels.invoice_cf1|htmlsafe}: </span><span class="number">{$invoice.custom_field1|htmlsafe}</span></li>
+		{/if}
+		{if $invoice.custom_field2 != null}
+						<li class="custom_field custom_field2"><span class="desc">{$customFieldLabels.invoice_cf2|htmlsafe}: </span><span class="number">{$invoice.custom_field2|htmlsafe}</span></li>
+		{/if}
+		{if $invoice.custom_field3 != null}
+						<li class="custom_field custom_field3"><span class="desc">{$customFieldLabels.invoice_cf3|htmlsafe}: </span><span class="number">{$invoice.custom_field3|htmlsafe}</span></li>
+		{/if}
+		{if $invoice.custom_field4 != null}
+						<li class="custom_field custom_field4"><span class="desc">{$customFieldLabels.invoice_cf4|htmlsafe}: </span><span class="number">{$invoice.custom_field4|htmlsafe}</span></li>
+		{/if}
+						<li class="total"><span class="desc">{$LANG.total}: </span><span class="number">{$invoice.total|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</span></li>
+						<li class="paid"><span class="desc">{$LANG.paid}: </span><span class="number">{$invoice.paid|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</span></li>
+						<li class="owing"><span class="desc">{$LANG.owing}: </span><span class="number">{$invoice.owing|siLocal_number}&nbsp;{$preference.pref_currency_sign|htmlsafe}</span></li>
+					</ul>
+				</div>
+			</div>
+			
 		</div>
+	
 
 
 

@@ -107,7 +107,7 @@ tr {
 /* Specific Elements */
 /* Header */
 #header {
-	position:absolute;
+	/*position:absolute;*/
 	top:0;
 	right:.125in;
 }
@@ -118,13 +118,39 @@ tr {
     text-align:center;
     text-transform:uppercase;
 }
-img#logo {
-    float:right;
+#biller_heading img#logo {
+    float:left;
     width:auto;
     height:25mm;
 }
+#biller_heading .desc{
+	display: none;
+}
+#biller_heading {
+	width:50em;
+	margin-left:auto;
+	margin-right:auto;
+}
+#biller_heading .custom_field{
+	font-size:150%;
+}
 
+#biller_address {
+	text-align:center;
+	line-height:1.5em;
+	padding-bottom:1em;
+	border-bottom:1px black solid;
+}
+#biller_address .org{
+	font-size:120%;
+	margin-bottom:1em;
+	
+}
 /* Summary */
+#invoice_summary_block {
+	float:right;
+	padding-top:3em;
+}
 #invoice_summary {
 	text-align:center;
 	padding:10px;
@@ -153,9 +179,9 @@ img#logo {
 /* Parties */
 #invoice_parties {
 	overflow:hidden;
-	width:50%;
+	/*width:50%;*/
 	margin:0;
-	padding:0;
+	padding:3em 0 0 0;
 }
 #invoice_parties h2 {
     padding-top:0;
@@ -179,7 +205,8 @@ img#logo {
 	border-bottom:solid 1pt #CCC;
 }
 #invoice_parties #invoice_customer {
-	padding-top:3em;
+	float:left;
+	width:30em;
 }
 #invoice_parties .info_mail {
 	margin:0;
@@ -204,14 +231,14 @@ img#logo {
 	display:block;
 	float:left;
 }
-#invoice_parties .desc {
-    display:block;
+#invoice_parties #info_customer .desc {
+    display:none;
     float:left;
     width:4em;
     padding:0 1em 0 0;
     text-align:right;
 }
-#invoice_parties .vcard div.adr .desc {
+#invoice_parties .invoice_customer .info_mail .desc {
 	display:none;
 }
 
