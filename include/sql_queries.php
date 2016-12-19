@@ -8,7 +8,7 @@ if(LOGGING) {
 $dbh = db_connector();
 
 /*
- * TODO - remove this code - mysql 5 only 
+ * TODO - remove this code - mysql 5 only
 if ($db_server == 'mysql') {
 	//SC: May not really be 5...
 	$mysql = 5;
@@ -24,7 +24,6 @@ $can_chk_log = (LOGGING && (isset($auth_session->id) && $auth_session->id > 0) &
 $can_log = $can_chk_log;
 unset($can_chk_log);
 
-
 function db_connector() {
 
 	global $config;
@@ -32,16 +31,16 @@ function db_connector() {
 	* strip the pdo_ section from the adapter
 	*/
 	$pdoAdapter = substr($config->database->adapter, 4);
-	
+
 	if(!defined('PDO::MYSQL_ATTR_INIT_COMMAND') AND $pdoAdapter == "mysql" AND $config->database->adapter->utf8 == true)
-	{ 
+	{
         simpleInvoicesError("PDO::mysql_attr");
 	}
 
 	try
 	{
-		
-		switch ($pdoAdapter) 
+
+		switch ($pdoAdapter)
 		{
 
 		    case "pgsql":
@@ -49,23 +48,23 @@ function db_connector() {
 					$pdoAdapter.':host='.$config->database->params->host.';	dbname='.$config->database->params->dbname,	$config->database->params->username, $config->database->params->password
 				);
 		    	break;
-		    	
+
 		    case "sqlite":
 		    	$connlink = new PDO(
 					$pdoAdapter.':host='.$config->database->params->host.';	dbname='.$config->database->params->dbname,	$config->database->params->username, $config->database->params->password
 				);
 				break;
-			
+
 		    case "mysql":
                 switch ($config->database->utf8)
                 {
                     case true:
-    
+
         			   	$connlink = new PDO(
         					'mysql:host='.$config->database->params->host.'; port='.$config->database->params->port.'; dbname='.$config->database->params->dbname, $config->database->params->username, $config->database->params->password,  array( PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8;")
         				);
 		        		break;
-				
+
         		    case false:
 		            default:
         		    	$connlink = new PDO(
@@ -76,16 +75,14 @@ function db_connector() {
     	    	break;
 
 		}
-		
-		
+
 	}
 	catch( PDOException $exception )
 	{
 		simpleInvoicesError("dbConnection",$exception->getMessage());
 		die($exception->getMessage());
 	}
-			
-			
+
 	return $connlink;
 }
 
@@ -127,14 +124,14 @@ function dbQuery($sqlQuery) {
 	}
 // $sth now has the PDO object or false on error.
 	*/
-	try {	
+	try {
 		$sth->execute();
 		dbLogger($sqlQuery);
 	} catch(Exception $e){
 		echo $e->getMessage();
 		echo "dbQuery: Dude, what happened to your query?:<br /><br /> ".htmlsafe($sqlQuery)."<br />".htmlsafe(end($sth->errorInfo()));
 	}
-	
+
 	return $sth;
 	//$sth = null;
 }
@@ -147,10 +144,10 @@ function dbLogger($sqlQuery) {
 	global $dbh;
 	global $auth_session;
 	global $can_log;
-	
+
 	$userid = $auth_session->id;
 	if($can_log
-		&& (preg_match('/^\s*select/iD',$sqlQuery) == 0) 
+		&& (preg_match('/^\s*select/iD',$sqlQuery) == 0)
 		&& (preg_match('/^\s*show\s*tables\s*like/iD',$sqlQuery) == 0)
 	   ) {
 		// Only log queries that could result in data/database  modification
@@ -192,7 +189,7 @@ function lastInsertId() {
 	global $config;
 	global $dbh;
 	$pdoAdapter = substr($config->database->adapter, 4);
-	
+
 	if ($pdoAdapter == 'pgsql') {
 		$sql = 'SELECT lastval()';
 	} elseif ($pdoAdapter == 'mysql') {
@@ -234,7 +231,7 @@ function _invoice_check_fk($biller, $customer, $type, $preference) {
 	$sth = $dbh->prepare('SELECT count(pref_id) FROM '.TB_PREFIX.'preferences WHERE pref_id = :id AND domain_id = :domain_id');
 	$sth->execute(array(':id' => $preference, ':domain_id' => $domain_id));
 	if ($sth->fetchColumn() == 0) { return false; }
-	
+
 	//All good
 	return true;
 }
@@ -304,9 +301,9 @@ function getTaxRate($id, $domain_id='') {
 }
 
 function getSQLPatches() {
-	
-	$sql  = "SELECT * FROM ".TB_PREFIX."sql_patchmanager 
-	            WHERE NOT (sql_patch = '' AND sql_release='' AND sql_statement = '') 
+
+	$sql  = "SELECT * FROM ".TB_PREFIX."sql_patchmanager
+	            WHERE NOT (sql_patch = '' AND sql_release='' AND sql_statement = '')
 	            ORDER BY sql_release, sql_patch_ref";
 	$sth = dbQuery($sql);
 	return $sth->fetchAll();
@@ -315,14 +312,14 @@ function getSQLPatches() {
 function getPreferences($domain_id='') {
 	global $LANG;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."preferences WHERE domain_id = :domain_id ORDER BY pref_description";
 	$sth  = dbQuery($sql,':domain_id', $domain_id);
-	
+
 	$preferences = null;
-	
+
 	for($i=0;$preference = $sth->fetch();$i++) {
-		
+
   		if ($preference['pref_enabled'] == 1) {
   			$preference['enabled'] = $LANG['enabled'];
   		} else {
@@ -331,7 +328,7 @@ function getPreferences($domain_id='') {
 
 		$preferences[$i] = $preference;
 	}
-	
+
 	return $preferences;
 }
 
@@ -339,15 +336,15 @@ function getActiveTaxes($domain_id='') {
 	global $LANG;
 	global $db_server;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."tax WHERE tax_enabled != 0 and domain_id = :domain_id ORDER BY tax_description";
 	if ($db_server == 'pgsql') {
 		$sql = "SELECT * FROM ".TB_PREFIX."tax WHERE tax_enabled ORDER BY tax_description";
 	}
 	$sth = dbQuery($sql, ':domain_id',$domain_id);
-	
+
 	$taxes = null;
-	
+
 	for($i=0;$tax = $sth->fetch();$i++) {
 		if ($tax['tax_enabled'] == 1) {
 			$tax['enabled'] = $LANG['enabled'];
@@ -357,14 +354,14 @@ function getActiveTaxes($domain_id='') {
 
 		$taxes[$i] = $tax;
 	}
-	
+
 	return $taxes;
 }
 
 function getActivePreferences($domain_id='') {
 
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."preferences WHERE pref_enabled and domain_id = :domain_id ORDER BY pref_description";
 	$sth  = dbQuery($sql, ':domain_id', $domain_id);
 
@@ -374,10 +371,10 @@ function getActivePreferences($domain_id='') {
 function getCustomFieldLabels($domain_id='') {
 	global $LANG;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."custom_fields WHERE domain_id = :domain_id ORDER BY cf_custom_field";
 	$sth = dbQuery($sql,':domain_id',$domain_id);
-	
+
 	for($i=0;$customField = $sth->fetch();$i++) {
 		$customFields[$customField['cf_custom_field']] = $customField['cf_custom_label'];
 
@@ -389,18 +386,18 @@ function getCustomFieldLabels($domain_id='') {
 
 	return $customFields;
 }
- 
+
 function getBillers($domain_id='') {
 	global $LANG;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."biller WHERE domain_id = :domain_id ORDER BY name";
 	$sth  = dbQuery($sql,':domain_id',$domain_id);
-	
+
 	$billers = null;
 
 	for($i=0; $biller = $sth->fetch(); $i++) {
-		
+
   		if ($biller['enabled'] == 1) {
   			$biller['enabled'] = $LANG['enabled'];
   		} else {
@@ -408,7 +405,7 @@ function getBillers($domain_id='') {
   		}
 		$billers[$i] = $biller;
 	}
-	
+
 	return $billers;
 }
 
@@ -421,16 +418,23 @@ function getActiveBillers($domain_id='') {
 		$sql = "SELECT * FROM ".TB_PREFIX."biller WHERE enabled AND domain_id = :domain_id ORDER BY name";
 	}
 	$sth = dbQuery($sql,':domain_id',$domain_id);
-	
+
 	return $sth->fetchAll();
 }
 
 function getTaxTypes() {
+<<<<<<< HEAD
 	
 	$types=  array(
                                 '%' => '%',
                                 '$' => '$',
                                 '€' => '€'
+=======
+
+	$types = array(
+                    '%' => '%',
+                    '$' => '$'
+>>>>>>> 992ecbf2abea40f8f862d2f9f1805850fa7fc7dc
 	);
 	return $types;
 }
@@ -438,12 +442,12 @@ function getTaxTypes() {
 function getPaymentType($id, $domain_id='') {
 	global $LANG;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."payment_types WHERE pt_id = :id AND domain_id = :domain_id";
 	$sth = dbQuery($sql, ':id', $id, ':domain_id',$domain_id);
 	$paymentType = $sth->fetch();
 	$paymentType['enabled'] = $paymentType['pt_enabled']==1?$LANG['enabled']:$LANG['disabled'];
-	
+
 	return $paymentType;
 }
 
@@ -451,20 +455,20 @@ function getPayment($id, $domain_id='') {
 	global $config;
 	$domain_id = domain_id::get($domain_id);
 
-	$sql = "SELECT 
-		ap.*, 
-		c.id as customer_id, 
-		c.name AS customer, 
-		b.id as biller_id, 
-		b.name AS biller 
-	FROM ".TB_PREFIX."payment ap, 
-		 ".TB_PREFIX."invoices iv, 
-		 ".TB_PREFIX."customers c, 
-		 ".TB_PREFIX."biller b 
-	WHERE 
-		ap.ac_inv_id = iv.id 
-	AND iv.customer_id = c.id 
-	AND iv.biller_id = b.id 
+	$sql = "SELECT
+		ap.*,
+		c.id as customer_id,
+		c.name AS customer,
+		b.id as biller_id,
+		b.name AS biller
+	FROM ".TB_PREFIX."payment ap,
+		 ".TB_PREFIX."invoices iv,
+		 ".TB_PREFIX."customers c,
+		 ".TB_PREFIX."biller b
+	WHERE
+		ap.ac_inv_id = iv.id
+	AND iv.customer_id = c.id
+	AND iv.biller_id = b.id
 	AND ap.id = :id
 	AND ap.domain_id = :domain_id";
 
@@ -478,25 +482,25 @@ function getInvoicePayments($id, $domain_id='') {
 
 	$domain_id = domain_id::get($domain_id);
 
-	$sql = "SELECT 
-				ap.*, 
+	$sql = "SELECT
+				ap.*,
 				c.name AS cname,
-				b.name AS bname 
-			FROM 
+				b.name AS bname
+			FROM
 				".TB_PREFIX."payment ap,
 				".TB_PREFIX."invoices iv,
 				".TB_PREFIX."customers c,
 				".TB_PREFIX."biller b
-			WHERE 
-				ap.ac_inv_id = :id 
-			AND ap.domain_id = :domain_id 
-			AND ap.ac_inv_id = iv.id 
+			WHERE
+				ap.ac_inv_id = :id
+			AND ap.domain_id = :domain_id
+			AND ap.ac_inv_id = iv.id
 			AND iv.domain_id = ap.domain_id
 			AND iv.customer_id = c.id
 			AND c.domain_id = iv.domain_id
-			AND iv.biller_id = b.id 
+			AND iv.biller_id = b.id
 			AND b.domain_id = iv.domain_id
-			ORDER BY 
+			ORDER BY
 				ap.id DESC";
 
 	return dbQuery($sql, ':id', $id, ':domain_id', $domain_id);
@@ -506,25 +510,25 @@ function getCustomerPayments($id, $domain_id='') {
 
 	$domain_id = domain_id::get($domain_id);
 
-	$sql = "SELECT 
-				ap.*, 
-				c.name AS cname, 
-				b.name AS bname 
-			FROM 
-				".TB_PREFIX."payment ap, 
-				".TB_PREFIX."invoices iv, 
-				".TB_PREFIX."customers c, 
-				".TB_PREFIX."biller b 
-			WHERE 
-				c.id = :id 
-			AND ap.domain_id = :domain_id 
-			AND ap.ac_inv_id = iv.id 
+	$sql = "SELECT
+				ap.*,
+				c.name AS cname,
+				b.name AS bname
+			FROM
+				".TB_PREFIX."payment ap,
+				".TB_PREFIX."invoices iv,
+				".TB_PREFIX."customers c,
+				".TB_PREFIX."biller b
+			WHERE
+				c.id = :id
+			AND ap.domain_id = :domain_id
+			AND ap.ac_inv_id = iv.id
 			AND iv.domain_id = ap.domain_id
-			AND iv.customer_id = c.id 
+			AND iv.customer_id = c.id
 			AND c.domain_id = iv.domain_id
-			AND iv.biller_id = b.id 
+			AND iv.biller_id = b.id
 			AND b.domain_id = iv.domain_id
-			ORDER BY 
+			ORDER BY
 				ap.id DESC";
 
 	return dbQuery($sql, ':id', $id, ':domain_id', $domain_id);
@@ -533,27 +537,27 @@ function getCustomerPayments($id, $domain_id='') {
 function getPayments($domain_id='') {
 
 	$domain_id = domain_id::get($domain_id);
-	
-	$sql = "SELECT 
-				ap.*, 
-				c.name AS cname, 
-				b.name AS bname 
+
+	$sql = "SELECT
+				ap.*,
+				c.name AS cname,
+				b.name AS bname
 			FROM 
-				".TB_PREFIX."payment ap, 
-				".TB_PREFIX."invoices iv, 
-				".TB_PREFIX."customers c, 
-				".TB_PREFIX."biller b 
-			WHERE 
-				ap.domain_id = :domain_id 
-			AND ap.ac_inv_id = iv.id 
+				".TB_PREFIX."payment ap,
+				".TB_PREFIX."invoices iv,
+				".TB_PREFIX."customers c,
+				".TB_PREFIX."biller b
+			WHERE
+				ap.domain_id = :domain_id
+			AND ap.ac_inv_id = iv.id
 			AND iv.domain_id = ap.domain_id
-			AND iv.customer_id = c.id 
+			AND iv.customer_id = c.id
 			AND c.domain_id = iv.domain_id
-			AND iv.biller_id = b.id 
+			AND iv.biller_id = b.id
 			AND b.domain_id = iv.domain_id
 			ORDER BY
 				ap.id DESC";
-	
+
 	return dbQuery($sql,':domain_id',$domain_id);
 }
 
@@ -568,22 +572,22 @@ function progressPayments($sth, $domain_id='') {
 		$tth = dbQuery($sql, ':id', $payment['ac_payment_type'], ':domain_id', $domain_id);
 
 		$pt = $tth->fetch();
-		
+
 		$payments[$i] = $payment;
 		$payments[$i]['description'] = $pt['pt_description'];
-		
+
 	}
-	
+
 	return $payments;
 }
 
 function getPaymentTypes($domain_id='') {
 	global $LANG;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."payment_types WHERE domain_id = :domain_id ORDER BY pt_description";
 	$sth = dbQuery($sql, ':domain_id',$domain_id);
-	
+
 	$paymentTypes = null;
 
 	for ($i=0;$paymentType = $sth->fetch();$i++) {
@@ -594,7 +598,7 @@ function getPaymentTypes($domain_id='') {
 		}
 		$paymentTypes[$i]=$paymentType;
 	}
-	
+
 	return $paymentTypes;
 }
 
@@ -602,13 +606,13 @@ function getActivePaymentTypes($domain_id='') {
 	global $LANG;
 	global $db_server;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."payment_types WHERE pt_enabled != 0 and domain_id = :domain_id ORDER BY pt_description";
 	if ($db_server == 'pgsql') {
 		$sql = "SELECT * FROM ".TB_PREFIX."payment_types WHERE pt_enabled and domain_id = :domain_id ORDER BY pt_description";
 	}
 	$sth = dbQuery($sql, ':domain_id', $domain_id);
-	
+
 	$paymentTypes = null;
 
 	for ($i=0;$paymentType = $sth->fetch();$i++) {
@@ -619,7 +623,7 @@ function getActivePaymentTypes($domain_id='') {
 		}
 		$paymentTypes[$i]=$paymentType;
 	}
-	
+
 	return $paymentTypes;
 }
 
@@ -645,20 +649,20 @@ function getProduct($id, $domain_id='') {
 function insertProductComplete($enabled=1,$visible=1,$description, $unit_price, $custom_field1 = NULL, $custom_field2, $custom_field3, $custom_field4, $notes, $domain_id='') {
 
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "INSERT into
     ".TB_PREFIX."products (
-            domain_id, 
-            description, 
-            unit_price, 
-            custom_field1, 
+            domain_id,
+            description,
+            unit_price,
+            custom_field1,
             custom_field2,
-            custom_field3, 
-            custom_field4, 
-            notes, 
-            enabled, 
+            custom_field3,
+            custom_field4,
+            notes,
+            enabled,
             visible
-    ) VALUES (	
+    ) VALUES (
             :domain_id,
             :description,
             :unit_price,
@@ -672,7 +676,7 @@ function insertProductComplete($enabled=1,$visible=1,$description, $unit_price, 
     )";
 
 	return dbQuery($sql,
-		':domain_id',$domain_id,	
+		':domain_id',$domain_id,
 		':description', $description,
 		':unit_price', $unit_price,
 		':custom_field1', $custom_field1,
@@ -688,7 +692,7 @@ function insertProductComplete($enabled=1,$visible=1,$description, $unit_price, 
 function insertProduct($enabled=1,$visible=1, $domain_id='') {
     global $logger;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	if (isset($_POST['enabled'])) $enabled = $_POST['enabled'];
     //select all attribts
     $sql = "SELECT * FROM ".TB_PREFIX."products_attributes";
@@ -708,7 +712,7 @@ function insertProduct($enabled=1,$visible=1, $domain_id='') {
             $attr[$v['id']] = $_POST['attribute'.$v[id]];
 //            $attr[$k]['a$v['id']] = $_POST['attribute'.$v[id]];
         }
-        
+
     }
 	$logger->log('Attr array: '.var_export($attr,true), Zend_Log::INFO);
 	$notes_as_description = ($_POST['notes_as_description'] == 'true' ? 'Y' : NULL) ;
@@ -717,25 +721,25 @@ function insertProduct($enabled=1,$visible=1, $domain_id='') {
 	$sql = "INSERT into
 		".TB_PREFIX."products
 		(
-			domain_id, 
-            description, 
-            unit_price, 
+			domain_id,
+            description,
+            unit_price,
             cost,
             reorder_level,
-            custom_field1, 
+            custom_field1,
             custom_field2,
 			custom_field3,
-            custom_field4, 
-            notes, 
-            default_tax_id, 
-            enabled, 
+            custom_field4,
+            notes,
+            default_tax_id,
+            enabled,
             visible,
             attribute,
             notes_as_description,
             show_description
 		)
 	VALUES
-		(	
+		(
 			:domain_id,
 			:description,
 			:unit_price,
@@ -755,7 +759,7 @@ function insertProduct($enabled=1,$visible=1, $domain_id='') {
 		)";
 
 	return dbQuery($sql,
-		':domain_id',$domain_id,	
+		':domain_id',$domain_id,
 		':description', $_POST['description'],
 		':unit_price', $_POST['unit_price'],
 		':cost', $_POST['cost'],
@@ -791,7 +795,7 @@ function updateProduct($domain_id='') {
         {
             $attr[$v['id']] = $_POST['attribute'.$v[id]];
         }
-        
+
     }
 	$notes_as_description = ($_POST['notes_as_description'] == 'true' ? 'Y' : NULL) ;
     $show_description =  ($_POST['show_description'] == 'true' ? 'Y' : NULL) ;
@@ -817,7 +821,7 @@ function updateProduct($domain_id='') {
 			AND domain_id = :domain_id";
 
 	return dbQuery($sql,
-		':domain_id',$domain_id, 
+		':domain_id',$domain_id,
 		':description', $_POST[description],
 		':enabled', $_POST['enabled'],
 		':notes', $_POST[notes],
@@ -840,15 +844,15 @@ function getProducts($domain_id='') {
 	global $LANG;
 	global $db_server;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."products WHERE visible = 1 AND domain_id = :domain_id ORDER BY description";
 	if ($db_server == 'pgsql') {
 		$sql = "SELECT * FROM ".TB_PREFIX."products WHERE visible and domain_id = :domain_id ORDER BY description";
 	}
 	$sth = dbQuery($sql, ':domain_id', $domain_id);
-	
+
 	$products = null;
-	
+
 	for($i=0;$product = $sth->fetch();$i++) {
 		
 		if ($product['enabled'] == 1) {
@@ -859,29 +863,29 @@ function getProducts($domain_id='') {
 
 		$products[$i] = $product;
 	}
-	
+
 	return $products;
 }
 
 function getActiveProducts($domain_id='') {
 
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."products WHERE enabled AND domain_id = :domain_id ORDER BY description";
 	$sth = dbQuery($sql, ':domain_id',$domain_id);
-	
+
 	return $sth->fetchAll();
 }
 
 function getTaxes($domain_id='') {
 	global $LANG;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."tax WHERE domain_id = :domain_id ORDER BY tax_description";
 	$sth = dbQuery($sql, ':domain_id', $domain_id);
-	
+
 	$taxes = null;
-	
+
 	for($i=0;$tax = $sth->fetch();$i++) {
 		if ($tax['tax_enabled'] == 1) {
 			$tax['enabled'] = $LANG['enabled'];
@@ -891,7 +895,7 @@ function getTaxes($domain_id='') {
 
 		$taxes[$i] = $tax;
 	}
-	
+
 	return $taxes;
 }
 
@@ -909,7 +913,7 @@ function getDefaultGeneric($param, $bool=true, $domain_id='') {
 function getDefaultCustomer($domain_id='') {
 
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT c.name AS name FROM ".TB_PREFIX."customers c, ".TB_PREFIX."system_defaults s WHERE ( s.name = 'customer' AND c.id = s.value AND c.domain_id = s.domain_id AND s.domain_id = :domain_id)";
 	$sth = dbQuery($sql, ':domain_id', $domain_id);
 	return $sth->fetch();
@@ -918,7 +922,7 @@ function getDefaultCustomer($domain_id='') {
 function getDefaultPaymentType($domain_id='') {
 
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT p.pt_description AS pt_description FROM ".TB_PREFIX."payment_types p, ".TB_PREFIX."system_defaults s WHERE ( s.name = 'payment_type' AND p.pt_id = s.value AND p.domain_id = s.domain_id AND s.domain_id = :domain_id)";
 	$sth = dbQuery($sql,':domain_id', $domain_id);
 	return $sth->fetch();
@@ -927,7 +931,7 @@ function getDefaultPaymentType($domain_id='') {
 function getDefaultPreference($domain_id='') {
 
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."preferences p, ".TB_PREFIX."system_defaults s WHERE ( s.name = 'preference' AND p.pref_id = s.value AND p.domain_id = s.domain_id AND s.domain_id = :domain_id)";
 	$sth = dbQuery($sql,':domain_id', $domain_id);
 	return $sth->fetch();
@@ -936,7 +940,7 @@ function getDefaultPreference($domain_id='') {
 function getDefaultBiller($domain_id='') {
 
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT b.name AS name FROM ".TB_PREFIX."biller b, ".TB_PREFIX."system_defaults s WHERE ( s.name = 'biller' AND b.id = s.value AND b.domain_id = s.domain_id AND s.domain_id = :domain_id)";
 	$sth = dbQuery($sql,':domain_id', $domain_id);
 	return $sth->fetch();
@@ -945,8 +949,8 @@ function getDefaultBiller($domain_id='') {
 function getDefaultTax($domain_id='') {
 
 	$domain_id = domain_id::get($domain_id);
-	
-	$sql = "SELECT * FROM ".TB_PREFIX."tax t, ".TB_PREFIX."system_defaults s WHERE (s.name = 'tax' AND t.tax_id = s.value) AND t.domain_id = s.domain_id AND s.domain_id = :domain_id";
+
+	$sql = "SELECT * FROM ".TB_PREFIX."tax t, ".TB_PREFIX."system_defaults s WHERE s.name = 'tax' AND t.tax_id = s.value AND t.domain_id = s.domain_id AND s.domain_id = :domain_id";
 	$sth = dbQuery($sql,':domain_id',$domain_id);
 	return $sth->fetch();
 }
@@ -970,6 +974,7 @@ function getDefaultInventory() {
 function getDefaultProductAttributes() {
 	return getDefaultGeneric('product_attributes');
 }
+
 function getDefaultLargeDataset() {
 	return getDefaultGeneric('large_dataset');
 }
@@ -985,7 +990,6 @@ function getInvoiceTotal($invoice_id, $domain_id='') {
 	$sql ="SELECT SUM(total) AS total FROM ".TB_PREFIX."invoice_items WHERE invoice_id =  :invoice_id AND domain_id = :domain_id";
 	$sth = dbQuery($sql, ':invoice_id', $invoice_id,':domain_id', $domain_id);
 	$res = $sth->fetch();
-	//echo "TOTAL".$res['total'];
 	return $res['total'];
 }
 
@@ -1000,15 +1004,13 @@ function setInvoiceStatus($invoice, $status, $domain_id=''){
 function getInvoice($id, $domain_id='') {
 	global $config;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."invoices WHERE id =  :id AND domain_id =  :domain_id";
-	//echo $sql;
-	
+
 	$sth  = dbQuery($sql, ':id', $id, ':domain_id', $domain_id);
 
-	//print_r($query);
 	$invoice = $sth->fetch();
-	
+
 	$invoice['calc_date'] = date('Y-m-d', strtotime( $invoice['date'] ) );
 	$invoice['date'] = siLocal::date( $invoice['date'] );
 	$invoice['total'] = getInvoiceTotal($invoice['id']);
@@ -1020,19 +1022,17 @@ function getInvoice($id, $domain_id='') {
 	$invoice['paid'] = calc_invoice_paid($invoice['id']);
 	$invoice['owing'] = $invoice['total'] - $invoice['paid'];
 
-	
 	#invoice total tax
 	$sql ="SELECT SUM(tax_amount) AS total_tax, SUM(total) AS total FROM ".TB_PREFIX."invoice_items WHERE invoice_id =  :id AND domain_id =  :domain_id";
 	$sth = dbQuery($sql, ':id', $id, ':domain_id', $domain_id);
 	$result = $sth->fetch();
 	//$invoice['total'] = number_format($result['total'],2);
 	$invoice['total_tax'] = $result['total_tax'];
-		
+
 	$invoice['tax_grouped'] = taxesGroupedForInvoice($id);
 
 	return $invoice;
 }
-
 
 /*
 Function: taxesGroupedForInvoice
@@ -1042,19 +1042,19 @@ function numberOfTaxesForInvoice($invoice_id, $domain_id='')
 {
 	$domain_id = domain_id::get($domain_id);
 
-	$sql = "SELECT 
+	$sql = "SELECT
 				DISTINCT tax.tax_id
-			FROM 
-				".TB_PREFIX."invoice_item_tax item_tax, 
-				".TB_PREFIX."invoice_items item, 
-				".TB_PREFIX."tax tax 
-			WHERE 
-				item.id = item_tax.invoice_item_id 
-			AND tax.tax_id = item_tax.tax_id 
+			FROM
+				".TB_PREFIX."invoice_item_tax item_tax,
+				".TB_PREFIX."invoice_items item,
+				".TB_PREFIX."tax tax
+			WHERE
+				item.id = item_tax.invoice_item_id
+			AND tax.tax_id = item_tax.tax_id
 			AND tax.domain_id = item.domain_id
 			AND item.invoice_id = :invoice_id
 			AND tax.domain_id = :domain_id
-			GROUP BY 
+			GROUP BY
 				tax.tax_id;";
 	$sth = dbQuery($sql, ':invoice_id', $invoice_id, ':domain_id', $auth_session->domain_id);
 	$result = $sth->rowCount();
@@ -1071,22 +1071,22 @@ function taxesGroupedForInvoice($invoice_id, $domain_id='')
 {
 	$domain_id = domain_id::get($domain_id);
 
-	$sql = "SELECT 
-				tax.tax_description as tax_name, 
+	$sql = "SELECT
+				tax.tax_description as tax_name,
 				SUM(item_tax.tax_amount) as tax_amount,
 				item_tax.tax_rate as tax_rate,
 				count(*) as count
-			FROM 
-				".TB_PREFIX."invoice_item_tax item_tax, 
-				".TB_PREFIX."invoice_items item, 
-				".TB_PREFIX."tax tax 
-			WHERE 
-				item.id = item_tax.invoice_item_id 
-			AND tax.tax_id = item_tax.tax_id 
+			FROM
+				".TB_PREFIX."invoice_item_tax item_tax,
+				".TB_PREFIX."invoice_items item,
+				".TB_PREFIX."tax tax
+			WHERE
+				item.id = item_tax.invoice_item_id
+			AND tax.tax_id = item_tax.tax_id
 			AND tax.domain_id = item.domain_id
 			AND item.invoice_id = :invoice_id
 			AND tax.domain_id = :domain_id
-			GROUP BY 
+			GROUP BY
 				tax.tax_id;";
 	$sth = dbQuery($sql, ':invoice_id', $invoice_id, ':domain_id', $domain_id);
 	$result = $sth->fetchAll();
@@ -1103,18 +1103,18 @@ function taxesGroupedForInvoiceItem($invoice_item_id, $domain_id='')
 {
 	$domain_id = domain_id::get($domain_id);
 
-	$sql = "select 
-				item_tax.id as row_id, 
-				tax.tax_description as tax_name, 
-				tax.tax_id as tax_id 
-			from 
-				".TB_PREFIX."invoice_item_tax item_tax, 
-				".TB_PREFIX."tax tax 
-			where 
-				item_tax.invoice_item_id = :invoice_item_id 
-			AND tax.tax_id = item_tax.tax_id 
+	$sql = "SELECT
+				item_tax.id as row_id,
+				tax.tax_description as tax_name,
+				tax.tax_id as tax_id
+			FROM
+				".TB_PREFIX."invoice_item_tax item_tax,
+				".TB_PREFIX."tax tax
+			WHERE
+				item_tax.invoice_item_id = :invoice_item_id
+			AND tax.tax_id = item_tax.tax_id
 			AND tax.domain_id = :domain_id
-			ORDER BY 
+			ORDER BY
 				row_id ASC;";
 	$sth = dbQuery($sql, ':invoice_item_id', $invoice_item_id, ':domain_id', $domain_id);
 	$result = $sth->fetchAll();
@@ -1145,7 +1145,7 @@ function setStatusExtension($extension_id, $status=2, $domain_id='') {
 function getExtensionID($extension_name = "none", $domain_id='') {
 
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."extensions WHERE name = :extension_name AND (domain_id =  0 OR domain_id = :domain_id ) ORDER BY domain_id DESC LIMIT 1";
 	$sth = dbQuery($sql,':extension_name', $extension_name, ':domain_id', $domain_id);
 	$extension_info = $sth->fetch();
@@ -1190,19 +1190,16 @@ function getSystemDefaults($domain_id='') {
         $sql_default .= " AND ext.name = 'core'";
         $sql_default .= " AND def.domain_id = :domain_id";
         $sql_default .= " ORDER BY extension_id ASC";		// order is important for overriding settings
-        
-        
 
         // get all settings from default domain (0)
         //$sth = dbQuery($sql.$current_settings.$order, 'domain_id', 0) or die(htmlsafe(end($dbh->errorInfo())));
-        
+
         $sth = $db->query($sql_default, ':domain_id', 0);	
 	}
 
 	$defaults = null;
 	$default = null;
-	
-	
+
 	while($default = $sth->fetch()) {
 		$defaults["$default[name]"] = $default['value'];
 	}
@@ -1214,8 +1211,7 @@ function getSystemDefaults($domain_id='') {
         $sql .= " WHERE enabled=1";
         $sql .= " AND def.domain_id = :domain_id";
         $sql .= " ORDER BY extension_id ASC";		// order is important for overriding settings
-        
-        
+
         // add all settings from current domain
         //$sth = dbQuery($sql.$current_settings.$order, 'domain_id', $auth_session->domain_id) or die(htmlsafe(end($dbh->errorInfo())));
         $sth = $db->query($sql, 'domain_id', $domain_id);
@@ -1263,7 +1259,7 @@ function updateDefault($name,$value,$extension_name="core") {
 }
 
 function getInvoiceType($id) {
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."invoice_type WHERE inv_ty_id = :id";
 	$sth = dbQuery($sql, ':id', $id);
 	return $sth->fetch();
@@ -1272,7 +1268,7 @@ function getInvoiceType($id) {
 function insertBiller() {
 	global $db_server;
 	$domain_id = domain_id::get();
-		
+
 	if ($db_server == 'pgsql') {
 		$sql = "INSERT into
 			".TB_PREFIX."biller (
@@ -1334,7 +1330,6 @@ function insertBiller() {
 			 )";
 	}
 
-
 	return dbQuery($sql,
 		':name', $_POST['name'],
 		':street_address', $_POST['street_address'],
@@ -1374,7 +1369,7 @@ function insertBiller() {
 }
 
 function updateBiller() {
-	
+
 	$domain_id = domain_id::get();
 
 	$sql = "UPDATE
@@ -1441,12 +1436,19 @@ function updateCustomer() {
 	global $config;
 	$domain_id = domain_id::get();
 
+<<<<<<< HEAD
+=======
+//	$encrypted_credit_card_number = '';
+	$is_new_cc_num = ($_POST['credit_card_number_new'] !='');
+
+>>>>>>> 992ecbf2abea40f8f862d2f9f1805850fa7fc7dc
 	$sql = "UPDATE
 				".TB_PREFIX."customers
 			SET
 				domain_id = :domain_id,
-				name = :name,
 				attention = :attention,
+				name = :name,
+				department = :department,
 				street_address = :street_address,
 				street_address2 = :street_address2,
 				city = :city,
@@ -1466,10 +1468,23 @@ function updateCustomer() {
 			WHERE
 				id = :id";
 
+<<<<<<< HEAD
+=======
+	if($is_new_cc_num)
+	{
+		$credit_card_number = $_POST['credit_card_number_new'];
+        
+        //cc
+        $enc = new encryption();
+        $key = $config->encryption->default->key;
+        $encrypted_credit_card_number = $enc->encrypt($key, $credit_card_number);
+
+>>>>>>> 992ecbf2abea40f8f862d2f9f1805850fa7fc7dc
 		return dbQuery($sql,
 			':domain_id', $domain_id,
-			':name', $_POST['name'],
 			':attention', $_POST['attention'],
+			':name', $_POST['name'],
+			':department', $_POST['department'],
 			':street_address', $_POST['street_address'],
 			':street_address2', $_POST['street_address2'],
 			':city', $_POST['city'],
@@ -1488,6 +1503,37 @@ function updateCustomer() {
 			':enabled', $_POST['enabled'],
 			':id', $_GET['id']
 		);
+<<<<<<< HEAD
+=======
+	} else {
+		return dbQuery($sql,
+			':domain_id', $domain_id,
+			':attention', $_POST['attention'],
+			':name', $_POST['name'],
+			':department', $_POST['department'],
+			':street_address', $_POST['street_address'],
+			':street_address2', $_POST['street_address2'],
+			':city', $_POST['city'],
+			':state', $_POST['state'],
+			':zip_code', $_POST['zip_code'],
+			':country', $_POST['country'],
+			':phone', $_POST['phone'],
+			':mobile_phone', $_POST['mobile_phone'],
+			':fax', $_POST['fax'],
+			':email', $_POST['email'],
+			':notes', $_POST['notes'],
+			':credit_card_holder_name', $_POST['credit_card_holder_name'],
+			':credit_card_expiry_month', $_POST['credit_card_expiry_month'],
+			':credit_card_expiry_year', $_POST['credit_card_expiry_year'],
+			':custom_field1', $_POST['custom_field1'],
+			':custom_field2', $_POST['custom_field2'],
+			':custom_field3', $_POST['custom_field3'],
+			':custom_field4', $_POST['custom_field4'],
+			':enabled', $_POST['enabled'],
+			':id', $_GET['id']
+		);
+	}
+>>>>>>> 992ecbf2abea40f8f862d2f9f1805850fa7fc7dc
 }
 
 function insertCustomer() {
@@ -1498,7 +1544,7 @@ function insertCustomer() {
 	$sql = "INSERT INTO 
 			".TB_PREFIX."customers
 			(
-				domain_id, attention, name, street_address, street_address2,
+				domain_id, attention, name, department, street_address, street_address2,
 				city, state, zip_code, country, phone, mobile_phone,
 				fax, email, notes,
 				custom_field1, custom_field2,
@@ -1506,16 +1552,24 @@ function insertCustomer() {
 			)
 			VALUES 
 			(
-				:domain_id ,:attention, :name, :street_address, :street_address2,
+				:domain_id ,:attention, :name, :department, :street_address, :street_address2,
 				:city, :state, :zip_code, :country, :phone, :mobile_phone,
 				:fax, :email, :notes, 
 				:custom_field1, :custom_field2,
 				:custom_field3, :custom_field4, :enabled
 			)";
+<<<<<<< HEAD
+=======
+	//cc
+	$enc = new encryption();
+    $key = $config->encryption->default->key;
+	$encrypted_credit_card_number = $enc->encrypt($key, $credit_card_number);
+>>>>>>> 992ecbf2abea40f8f862d2f9f1805850fa7fc7dc
 
 	return dbQuery($sql,
 		':attention', $attention,
 		':name', $name,
+		':department', $department,
 		':street_address', $street_address,
 		':street_address2', $street_address2,
 		':city', $city,
@@ -1534,7 +1588,7 @@ function insertCustomer() {
 		':enabled', $enabled,
 		':domain_id',$domain_id
 		);
-	
+
 }
 
 function searchCustomers($search) {
@@ -1553,9 +1607,7 @@ function searchCustomers($search) {
 	for($i=0; $customer = $sth->fetch(); $i++) {
 		$customers[$i] = $customer;
 	}
-	//echo $sql;
-	
-	//print_r($customers);
+
 	return $customers;
 }
 
@@ -1567,15 +1619,15 @@ function getInvoices(&$sth) {
 
 		$invoice['calc_date'] = date( 'Y-m-d', strtotime( $invoice['date'] ) );
 		$invoice['date'] = siLocal::date($invoice['date']);
-			
+
 		#invoice total total - start
 		$invoice['total'] = getInvoiceTotal($invoice['id']);
 		#invoice total total - end
-		
+
 		#amount paid calc - start
 		$invoice['paid'] = calc_invoice_paid($invoice['id']);
 		#amount paid calc - end
-		
+
 		#amount owing calc - start
 		$invoice['owing'] = $invoice['total'] - $invoice['paid'];
 		#amount owing calc - end
@@ -1624,9 +1676,9 @@ function getCustomerInvoices($id, $domain_id='') {
 function getCustomers($domain_id='') {
 	global $LANG;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$customer = null;
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."customers WHERE domain_id = :domain_id";
 	$sth = dbQuery($sql,':domain_id', $domain_id);
 
@@ -1649,12 +1701,12 @@ function getCustomers($domain_id='') {
 
 		#amount owing calc - start
 		$customer['owing'] = $customer['total'] - $customer['paid'];
-		
+
 		#amount owing calc - end
 		$customers[$i] = $customer;
 
 	}
-	
+
 	return $customers;
 }
 
@@ -1662,8 +1714,7 @@ function getActiveCustomers($domain_id='') {
 	global $LANG;
 	global $db_server;
 	$domain_id = domain_id::get($domain_id);
-	
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."customers WHERE enabled != 0 and domain_id = :domain_id ORDER BY name";
 	if ($db_server == 'pgsql') {
 		$sql = "SELECT * FROM ".TB_PREFIX."customers WHERE enabled and domain_id = :domain_id ORDER BY name";
@@ -1681,7 +1732,7 @@ function getTopDebtor($domain_id='') {
   $debtor = null;
 
   #Largest debtor query - start
-  
+
 	$sql = "SELECT	
 			c.id AS \"CID\",
 	        c.name AS \"Customer\",
@@ -1704,7 +1755,7 @@ function getTopDebtor($domain_id='') {
 	$sth = dbQuery($sql, ':domain_id', $domain_id);
 
 	$debtor = $sth->fetch();
-  
+
   #Largest debtor query - end
   return $debtor;
 }
@@ -1717,7 +1768,7 @@ function getTopCustomer($domain_id='') {
   $customer = null;
 
   #Top customer query - start
-  
+
 	$sql2 = "SELECT
 			c.id AS \"CID\",
 	        c.name AS \"Customer\",
@@ -1740,7 +1791,7 @@ function getTopCustomer($domain_id='') {
 	$tth = dbQuery($sql2,':domain_id',$domain_id);
 
 	$customer = $tth->fetch();
- 
+
   #Top customer query - end
   return $customer;
 }
@@ -1753,7 +1804,7 @@ function getTopBiller($domain_id='') {
   $biller = null;
 
   #Top biller query - start
- 	
+
 	$sql3 = "SELECT
 		b.name,  
 		sum(ii.total) as Total 
@@ -1771,7 +1822,7 @@ function getTopBiller($domain_id='') {
 	$uth = dbQuery($sql3, ':domain_id', $domain_id);
 
 	$biller = $uth->fetch();
-  
+
   #Top biller query - start
   return $biller;
 }
@@ -1784,7 +1835,7 @@ function insertTaxRate($domain_id='') {
 				(domain_id, tax_description, tax_percentage, type,  tax_enabled)
 			VALUES
 				(:domain_id, :description, :percent, :type, :enabled)";
-	
+
 	$display_block = $LANG['save_tax_rate_success'];
 	if (!(dbQuery($sql,
 		':domain_id', $domain_id,
@@ -1800,7 +1851,7 @@ function insertTaxRate($domain_id='') {
 function updateTaxRate($domain_id='') {
 	global $LANG;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "UPDATE
 				".TB_PREFIX."tax
 			SET
@@ -1838,12 +1889,10 @@ function SqlDateWithTime($in_date){
 	return $out_date;
 }
 
-
-
 function insertInvoice($type, $domain_id='') {
 	global $db_server;
 	$domain_id = domain_id::get($domain_id);
-	
+
 	if ($db_server == 'mysql' && !_invoice_check_fk(
 		$_POST['biller_id'], $_POST['customer_id'],
 		$type, $_POST['preference_id'])) {
@@ -1914,7 +1963,7 @@ function insertInvoice($type, $domain_id='') {
 				:customField4
 				)";
 	}
-	//echo $sql;
+
     $pref_group=getPreference($_POST[preference_id]);
 
 	//also set the current time (if null or =00:00:00)
@@ -2023,7 +2072,6 @@ function insertInvoiceItem($invoice_id,$quantity,$product_id,$line_number,$line_
         
     }
 
-	
 	$tax_total = getTaxesPerLineItem($line_item_tax_id,$quantity, $unit_price, $domain_id);
 
 	$logger->log(' ', Zend_Log::INFO);
@@ -2043,7 +2091,6 @@ function insertInvoiceItem($invoice_id,$quantity,$product_id,$line_number,$line_
 	{	
 		$description ="";
 	}
-
 
 	if ($db_server == 'mysql' && !_invoice_items_check_fk(
 		$invoice_id, $product_id, $tax['tax_id'])) {
@@ -2076,7 +2123,7 @@ function insertInvoiceItem($invoice_id,$quantity,$product_id,$line_number,$line_
                 :attribute
 			)";
 
-	//echo $sql;
+
 	dbQuery($sql,
 		':invoice_id', $invoice_id,
 		':domain_id', $domain_id,
@@ -2139,7 +2186,7 @@ function lineItemTaxCalc($tax, $unit_price, $quantity)
 	{
 		$tax_amount = $tax['tax_percentage'] * $quantity;
 	}
-		
+
 	return $tax_amount;
 }
 /*
@@ -2163,7 +2210,6 @@ function invoice_item_tax($invoice_item_id, $line_item_tax_id, $unit_price, $qua
 		$logger->log("Invoice item: ".$invoice_item_id." tax lines deleted", Zend_Log::INFO);
 
 		dbQuery($sql_delete,':invoice_item_id',$invoice_item_id);
-
 
 	}
 
@@ -2215,6 +2261,7 @@ function invoice_item_tax($invoice_item_id, $line_item_tax_id, $unit_price, $qua
 	//TODO fix this
 	return true;
 }
+
 function updateInvoiceItem($id, $quantity, $product_id, $line_number, $line_item_tax_id, $description, $unit_price, $attribute="", $domain_id='') {
 
 	global $logger;
@@ -2224,7 +2271,7 @@ function updateInvoiceItem($id, $quantity, $product_id, $line_number, $line_item
 
 	//$product = getProduct($product_id);
 	//$tax = getTaxRate($tax_id);
-	
+
     $attr = array();
 	$logger->log('Line item attributes: '.var_export($attribute,true), Zend_Log::INFO);
     foreach($attribute as $k=>$v)
@@ -2233,7 +2280,7 @@ function updateInvoiceItem($id, $quantity, $product_id, $line_number, $line_item
         {
             $attr[$k] = $v;
         }
-        
+
     }
 
 	$tax_total = getTaxesPerLineItem($line_item_tax_id,$quantity, $unit_price);
@@ -2254,7 +2301,6 @@ function updateInvoiceItem($id, $quantity, $product_id, $line_number, $line_item
 		$description ="";
 	}
 
-
 	if ($db_server == 'mysql' && !_invoice_items_check_fk(
 		null, $product_id, $tax_id, 'update')) {
 		return null;
@@ -2270,9 +2316,7 @@ function updateInvoiceItem($id, $quantity, $product_id, $line_number, $line_item
 	total = :total,			
 	attribute = :attribute			
 	WHERE id = :id AND domain_id = :domain_id";
-	
-	//echo $sql;
-		
+
 	dbQuery($sql,
 		':quantity', $quantity,
 		':product_id', $product_id,
@@ -2451,7 +2495,7 @@ function delete($module, $idField, $id, $domain_id='') {
 			$sth = $dbh->prepare('SELECT count(*)
 				FROM '.TB_PREFIX.'invoice_items
 				WHERE product_id = :id AND domain_id = :domain_id');
-			$sth->execute(array(':id' => $id, ':domain_id', $domain_id));
+			$sth->execute(array(':id' => $id, ':domain_id' => $domain_id));
 			$ref = $sth->fetch();
 			if ($sth->fetchColumn() != 0) {
 				// Fail, product still in use
@@ -2474,7 +2518,7 @@ function delete($module, $idField, $id, $domain_id='') {
 				UNION ALL
 				SELECT id FROM '.TB_PREFIX.'payment
 				WHERE ac_inv_id = :id AND domain_id = :domain_id) x');
-			$sth->execute(array(':id' => $id, ':domain_id', $domain_id));
+			$sth->execute(array(':id' => $id, ':domain_id' => $domain_id));
 			if ($sth->fetchColumn() != 0) {
 				// Fail, line items or payments still exist
 				return false;
@@ -2501,7 +2545,7 @@ function delete($module, $idField, $id, $domain_id='') {
 		// Fail, column whitelisting not performed
 		return false;
 	}
-		
+
 	// Tablename and column both pass whitelisting and FK checks
 	$sql = "DELETE FROM ".TB_PREFIX."$module WHERE $s_idField = :id";
 	if ($has_domain_id) $sql .= " AND domain_id = :domain_id";
@@ -2516,12 +2560,12 @@ function maxInvoice($domain_id='') {
 
 	global $LANG;
     $domain_id = domain_id::get($domain_id);
-	
+
 	$sql = "SELECT max(id) as maxId FROM ".TB_PREFIX."invoices WHERE domain_id = :domain_id";
 
 	$sth = dbQuery($sql, ':domain_id', $domain_id);
 	return $sth->fetch();
-	
+
 //while ($Array_max = mysql_fetch_array($result_max) ) {
 //$max_invoice_id = $Array_max['max_inv_id'];
 };
@@ -2532,7 +2576,7 @@ function checkTableExists($table = "" ) {
 	//$db = db::getInstance();
 	//var_dump($db);
 	$table == "" ? TB_PREFIX."biller" : $table;
-	
+
   //  echo $table;
 	global $LANG;
 	global $dbh;
@@ -2571,7 +2615,7 @@ function checkFieldExists($table,$field) {
 	global $LANG;
 	global $dbh;
 	global $db_server;
-	
+
 	$sql = "SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE column_name = :field AND table_name = :table LIMIT 1";
 	if ($db_server == 'pgsql') {
 		// Use a nicer syntax
@@ -2579,7 +2623,7 @@ function checkFieldExists($table,$field) {
 	}
 
 	$sth = $dbh->prepare($sql);
-	
+
 	if ($sth && $sth->execute(array(':field' => $field, ':table' => $table))) {
 		if ($sth->fetch()) {
 			return true;
@@ -2609,13 +2653,12 @@ function getURL()
 	$dir = dirname($_SERVER['PHP_SELF']);
 	//remove incorrect slashes for WinXP etc.
  $dir = str_replace('\\','',$dir);
- 
+
 	//set the port of http(s) section
 	if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') {
 		$_SERVER['FULL_URL'] = "https://";
 	} else {
 		$_SERVER['FULL_URL'] = "http://";
-
 	}
 
 	$_SERVER['FULL_URL'] .= $config->authentication->http.$_SERVER['HTTP_HOST'].$dir;
@@ -2623,43 +2666,42 @@ function getURL()
 	return $_SERVER['FULL_URL'];
 
 }
+
 function urlPDF($invoiceID) {
-	
+
 	$url = getURL();
 //	html2ps does not like &amp; and htmlcharacters encoding - latter useless since InvoiceID comes from an integer field	
 //	$script = "/index.php?module=invoices&amp;view=templates/template&amp;invoice=".htmlsafe($invoiceID)."&amp;action=view&amp;location=pdf";
 	$script = "/index.php?module=invoices&view=template&id=$invoiceID&action=view&location=pdf";
 
 	$full_url=$url.$script;
-	
+
 	return $full_url;
 }
 
 function sql2array($strSql) { 
 	global $dbh;
     $sqlInArray = null; 
- 
+
     $result_strSql = dbQuery($strSql); 
- 
+
     for($i=0;$sqlInRow = PDOStatement::fetchAll($result_strSql);$i++) { 
- 
+
         $sqlInArray[$i] = $sqlInRow; 
     } 
     return $sqlInArray; 
 }
 
-
 function getNumberOfDoneSQLPatches() {
 
 	$check_patches_sql = "SELECT count(sql_patch) AS count FROM ".TB_PREFIX."sql_patchmanager ";
 	$sth = dbQuery($check_patches_sql);
-		
+
 	$patches = $sth->fetch();
-	
+
 	//Returns number of patches applied
 	return $patches['count'];
 }
-
 
 function pdfThis($html,$file_location="",$pdfname)
 {
@@ -2697,7 +2739,7 @@ function pdfThis($html,$file_location="",$pdfname)
 		function convert_to_pdf($html_to_pdf, $pdfname, $file_location="") {
 
 			global $config;
-		  
+
 			$destination = $file_location=="download" ? "DestinationDownload" : "DestinationFile";
 		  /**
 		   * Handles the saving generated PDF to user-defined output file on server
@@ -2723,8 +2765,7 @@ function pdfThis($html,$file_location="",$pdfname)
 		  }
 		 }
 
-		  $pipeline = PipelineFactory::create_default_pipeline("", // Attempt to auto-detect encoding
-															   "");
+		  $pipeline = PipelineFactory::create_default_pipeline("", ""); // Attempt to auto-detect encoding
 
 		  // Override HTML source 
 		  $pipeline->fetchers[] = new MyFetcherLocalFile($html_to_pdf);
@@ -2787,32 +2828,30 @@ function pdfThis($html,$file_location="",$pdfname)
 	convert_to_pdf($html, $pdfname, $file_location);
 
 }
+
 // ------------------------------------------------------------------------------
 function getNumberOfDonePatches() {
 
-
 	$check_patches_sql = "SELECT max(sql_patch_ref) AS count FROM ".TB_PREFIX."sql_patchmanager ";
 	$sth = dbQuery($check_patches_sql);
-		
+
 	$patches = $sth->fetch();
-	
+
 	//Returns number of patches applied
 	return $patches['count'];
 }
-
 
 // ------------------------------------------------------------------------------
 function getNumberOfPatches() {
 	global $patch;
 	#Max patches applied - start
-		
+
 	$patches = getNumberOfDonePatches();
 	//$patch_count = count($patch);
 	$patch_count = max( array_keys( $patch ) );
 	//Returns number of patches to be applied
 	return $patch_count - $patches;
 }
-
 
 // ------------------------------------------------------------------------------
 function runPatches() {
@@ -2832,7 +2871,6 @@ function runPatches() {
 
 	$smarty_datas=array();	
 
-
 	if(count($rows) == 1) {
 
 		if ($db_server == 'pgsql') {
@@ -2848,11 +2886,10 @@ function runPatches() {
 			$dbh->commit();
 		}
 
-		//exit();
 		$smarty_datas['message']= "The database patches have now been applied. You can now start working with Simple Invoices";
 		$smarty_datas['html']	= "<div class='si_toolbar si_toolbar_form'><a href='index.php'>HOME</a></div>";
 		$smarty_datas['refresh']=5;
-	} 
+	}
 	else {
 
 		$smarty_datas['html']= "Step 1 - This is the first time Database Updates has been run";
@@ -2864,12 +2901,11 @@ function runPatches() {
 		.";
 
 	}
-	
+
 	global $smarty;
 	$smarty-> assign("page",$smarty_datas);
 
 }
-
 
 // ------------------------------------------------------------------------------
 function donePatches() {
@@ -2880,13 +2916,11 @@ function donePatches() {
 	$smarty-> assign("page",$smarty_datas);
 }
 
-
 // ------------------------------------------------------------------------------
 function listPatches() {
 		global $patch;
 
 	//if(mysql_num_rows(mysqlQuery("SHOW TABLES LIKE '".TB_PREFIX."sql_patchmanager'")) == 1) {
-
 		
 		$smarty_datas=array();		
 		$smarty_datas['message']= "Your version of Simple Invoices can now be upgraded.	With this new release there are database patches that need to be applied";
@@ -2918,7 +2952,6 @@ EOD;
 	$smarty-> assign("page",$smarty_datas);
 }
 
-
 // ------------------------------------------------------------------------------
 function check_sql_patch($check_sql_patch_ref, $check_sql_patch_field) {
    	$sql = "SELECT * FROM ".TB_PREFIX."sql_patchmanager WHERE sql_patch_ref = :patch" ;
@@ -2930,7 +2963,6 @@ function check_sql_patch($check_sql_patch_ref, $check_sql_patch_field) {
 	return false;
 }
 
-
 // ------------------------------------------------------------------------------
 function run_sql_patch($id, $patch) {
 	global $dbh;
@@ -2939,7 +2971,7 @@ function run_sql_patch($id, $patch) {
 
 	$sql = "SELECT * FROM ".TB_PREFIX."sql_patchmanager WHERE sql_patch_ref = :id" ;
 	$sth = dbQuery($sql, ':id', $id);
-	
+
 	$escaped_id = htmlsafe($id);
 	$patch_name = htmlsafe($patch['name']);
 	#forget about the patch as it has already been run!!
@@ -2952,7 +2984,7 @@ function run_sql_patch($id, $patch) {
 		$smarty_row['result']	="skip";
 	}
 	else {
-		
+
 		//patch hasn't been run
 		#so run the patch
 		dbQuery($patch['patch']);
@@ -2967,7 +2999,7 @@ function run_sql_patch($id, $patch) {
 		if($id == 126) {
 			patch126();
 		} 
-		
+
 		/*
 		 * cusom_fields to new customFields patch - commented out till future
 		 */
@@ -2980,7 +3012,6 @@ function run_sql_patch($id, $patch) {
 	}
 	return $smarty_row;
 }
-
 
 // ------------------------------------------------------------------------------
 function initialise_sql_patch() {
@@ -3000,17 +3031,16 @@ VALUES ('','1','Create ".TB_PREFIX."sql_patchmanger table','20060514', :patch)";
 	dbQuery($sql_insert, ':patch', $sql_patch_init);
 
 	$log .= "Step 3 - The SQL patch has been inserted into the SQL patch table<br />";
-	
+
 	return $log;
 }
-
 
 // ------------------------------------------------------------------------------
 function patch126() {
 	//SC: MySQL-only function, not porting to PostgreSQL
 	$sql = "SELECT * FROM ".TB_PREFIX."invoice_items WHERE product_id = 0";
 	$sth = dbQuery($sql);
-	
+
 	while($res = $sth->fetch()) {
 		$sql = "INSERT INTO ".TB_PREFIX."products (id, description, unit_price, enabled, visible) 
 			VALUES (NULL, :description, :gross_total, '0',  '0')";
@@ -3027,22 +3057,20 @@ function patch126() {
 	}
 }
 
-
 // ------------------------------------------------------------------------------
 function convertInitCustomFields() {
 // This function is exactly the same as convertCustomFields() in ./include/customFieldConversion.php but without the print_r and echo output while storing
 	/* check if any value set -> keeps all data for sure */
 	global $dbh;
     $domain_id = domain_id::get();
-	
+
 	$sql = "SELECT * FROM ".TB_PREFIX."custom_fields WHERE domain_id = :domain_id";
 	$sth = $dbh->prepare($sql, ':domain_id', $domain_id);
 	$sth->execute();
-	
+
 	while($custom = $sth->fetch()) {
 		if(preg_match("/(.+)_cf([1-4])/",$custom['cf_custom_field'],$match)) {
-			//print_r($match);
-			
+
 			switch($match[1]) {
 				case "biller": $cat = 1;	break;
 				case "customer": $cat = 2;	break;
@@ -3050,7 +3078,7 @@ function convertInitCustomFields() {
 				case "invoice": $cat = 4;	break;
 				default: $case = 0;
 			}
-			
+
 			$cf_field = "custom_field".$match[2];
 			$sql = "SELECT id, :field FROM :table WHERE domain_id = :domain_id";
 			$tablename = TB_PREFIX.$match[1];
@@ -3058,7 +3086,7 @@ function convertInitCustomFields() {
 			if($match[1] != "biller") {
 				$tablename .= "s";
 			}
-			
+
 			$store = false;
 
 			/*
@@ -3083,21 +3111,18 @@ function convertInitCustomFields() {
 					$store = true;
 					break;
 				}
-				//echo($res[0]."<br />");
 			}
-			
+
 			if($store) {
-//				print_r($res);
-//				echo "<br />".$sql."   ".$res['id'];
-				
+
 				//create new text custom field
 				saveInitCustomField(3,$cat,$custom['cf_custom_field'],$custom['cf_custom_label']);
 				$id = lastInsertId();
 				error_log($id);
-				
+
 				$plugin = getPluginById(3);
 				$plugin->setFieldId($id);
-				
+
 				//insert all data
 				$uth = $dbh->prepare($sql);
 				$uth->bindValue(':table', $tablename);
@@ -3111,8 +3136,6 @@ function convertInitCustomFields() {
 		}
 	}
 }
-
-
 
 // ------------------------------------------------------------------------------
 function saveInitCustomField($id, $category, $name, $description) {
@@ -3136,7 +3159,7 @@ function saveInitCustomField($id, $category, $name, $description) {
 function get_custom_field_label($field, $domain_id='')         {
 	global $LANG;
 	$domain_id = domain_id::get($domain_id);
-	
+
     $sql =  "SELECT cf_custom_label FROM ".TB_PREFIX."custom_fields WHERE cf_custom_field = :field AND domain_id = :domain_id";
     $sth = dbQuery($sql, ':field', $field, ':domain_id', $domain_id);
 
@@ -3149,7 +3172,7 @@ function get_custom_field_label($field, $domain_id='')         {
     if ($cf['cf_custom_label'] == null) {
        	$cf['cf_custom_label'] = $LANG['custom_field'] . $get_cf_number;
     }
-        
+
     return $cf['cf_custom_label'];
 }
 
@@ -3167,7 +3190,6 @@ function calc_invoice_paid($inv_idField, $domain_id='') {
 		return $invoice_paid_Field;
 	}
 }
-
 
 function calc_customer_total($customer_id, $domain_id='', $isReal=false) {
 	global $LANG;
@@ -3208,7 +3230,7 @@ function calc_customer_paid($customer_id, $domain_id='', $isReal=false) {
 		$real1 = " LEFT JOIN ".TB_PREFIX."preferences pr ON (pr.pref_id = iv.preference_id AND pr.domain_id = iv.domain_id)";
 		$real2 = " AND pr.status = 1";
 	}
-		
+
 #amount paid calc - start
 	$sql = "
 	SELECT COALESCE(SUM(ap.ac_amount), 0) AS amount 
@@ -3220,7 +3242,7 @@ function calc_customer_paid($customer_id, $domain_id='', $isReal=false) {
 		iv.customer_id = :customer
 	AND ap.domain_id = :domain_id
 	$real2";
-	
+
 	$sth = dbQuery($sql, ':customer', $customer_id, ':domain_id',$domain_id);
 	$invoice = $sth->fetch();
 
@@ -3238,7 +3260,7 @@ function calc_customer_paid($customer_id, $domain_id='', $isReal=false) {
 function calc_invoice_tax($invoice_id, $domain_id='') {
 	global $LANG;
 	$domain_id = domain_id::get($domain_id);
-		
+
 	#invoice total tax
 	$sql ="SELECT SUM(tax_amount) AS total_tax FROM ".TB_PREFIX."invoice_items WHERE invoice_id = :invoice_id AND domain_id = :domain_id";
 	$sth = dbQuery($sql, ':invoice_id', $invoice_id, ':domain_id',$domain_id);
@@ -3271,11 +3293,9 @@ function show_custom_field($custom_field,$custom_field_value,$permission,$css_cl
 
 	$domain_id = domain_id::get();
 
-		/*
-	*get the last character of the $custom field - used to set the name of the field
-	*/
-	$custom_field_number =  substr($custom_field, -1, 1);
+	# get the last character of the $custom field - used to set the name of the field
 
+	$custom_field_number =  substr($custom_field, -1, 1);
 
 	#get the label for the custom field
 

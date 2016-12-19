@@ -9,7 +9,7 @@
 * 	 Ali Akar [ali_akar@gmx.de]
 *
 * Last edited:
-*    2013-10-16
+*    2016-10-04
 *
 * License:
 *	 GPL v3 or above
@@ -17,17 +17,17 @@
 
 /*// 1 means that the variable has been translated and // zero means it hasnt been translated - this is used by a script to calculate how much of each file has been done
 regex :%s/;/ /1/;// 1\/\/1/g - remove the spaces
- */
+*/
 
 #all
 $LANG['about'] = "Über";//1
-$LANG['account_info'] = "Kontoinformation";//1
-$LANG['actions'] = "Aktionen";//1
+$LANG['account_info'] = "Konto-Information";//1
+$LANG['actions'] = "Aktion";//1
 $LANG['add'] = "Hinzufügen";//1
 $LANG['add_biller'] = "Gläubiger anlegen";//1
 $LANG['add_customer'] = "Kunde anlegen";//1
-$LANG['add_invoice_item'] = "Neuen Position anlegen";//1
-$LANG['add_invoice_preference'] = "Neue Rechnungspräferenz hinzufügen";//1
+$LANG['add_invoice_item'] = "Rechnungsposition hinzufügen";//1
+$LANG['add_invoice_preference'] = "Rechnungspräferenz hinzufügen";//1
 $LANG['add_item'] = "Position hinzufügen";//1
 $LANG['add_new_biller'] = "Neuen Gläubiger hinzufügen";//1
 $LANG['add_new_invoice'] = "Neue Rechnung";//1
@@ -82,7 +82,7 @@ $LANG['consulting'] = "Beratung";//1
 $LANG['consulting_style'] = "Beratungsart";//1
 $LANG['cost'] = "Kostet";//1
 $LANG['country'] = "Land";//1
-$LANG['create_invoice'] ="Rechnung erstellen";//1
+$LANG['create_invoice'] = "Rechnung erstellen";//1
 $LANG['credit_card_details'] = "Kreditkartendetails";//1
 $LANG['credit_card_expiry_month'] = "Kreditkartennummer Verfallsmonat";//1
 $LANG['credit_card_expiry_year'] = "Kreditkartennummer Verfallsjahr";//1
@@ -93,7 +93,7 @@ $LANG['credit_card_number_new'] = "Neue Kreditkartennummer";//1
 $LANG['credits'] = "Danksagungen";//1
 $LANG['currency_code'] = "Währungscode";//1
 $LANG['currency_sign'] = "Währungszeichen";//1
-$LANG['currency_sign_non_dollar'] = "Euro, Pfund, kein-$ Zeichen bitte, weitere Infos";//1
+$LANG['currency_sign_non_dollar'] = "Euro, Pfund, kein-\$ Zeichen bitte, weitere Infos";//1
 $LANG['custom_field'] = "Benutzerdefiniertes Feld";//1
 $LANG['custom_field1'] = "Benutzerdefiniertes Feld 1";//1
 $LANG['custom_field2'] = "Benutzerdefiniertes Feld 2";//1
@@ -104,9 +104,10 @@ $LANG['custom_fields'] = "Benutzerdefinierte Felder";//1
 $LANG['custom_fields_upper'] = "Benutzerdefinierte Felder";//1
 $LANG['custom_label'] = "Benutzerdefinierte Bezeichnung";//1
 $LANG['customer'] = "Kunde";//1
-$LANG['customer_account'] = "Kundenkonto";//1
+$LANG['customer_account'] = "Kunden-Konto";//1
 $LANG['customer_add'] = "Neuen Kunden hinzufügen";//1
 $LANG['customer_contact'] = "Kundenkontakt (z. Hdn.)";//1
+$LANG['customer_department'] = "Abteilung";//1
 $LANG['customer_details'] = "Kundendetails";//1
 $LANG['customer_edit'] = "Kunden bearbeiten";//1
 $LANG['customer_id'] = "Kunden-Nr";//1
@@ -115,11 +116,11 @@ $LANG['customer_short'] = "Kd.";//1
 $LANG['customers'] = "Kunden";//1
 $LANG['customise_settings'] = "Einstellungen anpassen";//1
 $LANG['dashboard'] = "Dashboard";//1
-$LANG['database_backup'] = "Datenbankbackup";//1
-$LANG['database_log'] = "Datenbankprotokoll";//1
+$LANG['database_backup'] = "Datenbank Sicherung";//1
+$LANG['database_log'] = "Datenbank Log";//1
 $LANG['database_upgrade_manager'] = "Datenbank Aktualisierungsmanager";//1
 $LANG['date'] = "Datum";//1
-$LANG['date_created'] = "Erstelldatum";//1
+$LANG['date_created'] = "Erstellungsdatum";//1
 $LANG['date_formatted'] = "Datum (JJJJ-MM-TT)";//1
 $LANG['date_upper'] = "Datum";//1
 $LANG['days'] = "Tage";//1
@@ -217,8 +218,8 @@ $LANG['help_email_bcc'] = "Dieses Feld ist nicht zwingend und erhält seinen Wer
 $LANG['help_email_cc'] = "Dieses Feld ist nicht zwingend. Sie können nicht mehr als eine -1- Emailadresse im CC Feld angeben.<br /><br />Hinweis: Es ist nicht möglich mehrere Emailadressen durch , oder ; zu trennen!";//1
 $LANG['help_email_from'] = "Dieses Feld ist zwingend. Das Feld erhält standardmäßig seinen Wert über Einstellungen in der Gläubiger Emailadresse. Sie können die Adresse ändern aber nicht mehr als eine -1- Emailadresse im Feld eintragen.<br /><br />Hinweis: Es ist nicht möglich mehrere Emailadressen durch , oder ; zu trennen!";//1
 $LANG['help_email_to'] = "Dieses Feld ist zwingend. Das Feld erhält standardmäßig seinen Wert über Einstellungen in der Kunden Emailadresse. Sie können die Adresse bei Bedarf ändern.<br /><br />Hinweis: Sie können mehrere Emailadressen verwenden wenn Sie diese per , oder ; trennen.";//1
-$LANG['help_insert_biller_text'] = "To select no logo please select '_default_blank_logo.png' from the list.<br /><br />To add additional logos into Simple Invoices, copy the logo file into the logo directory in the Simple Invoices folder.";//1
-$LANG['help_inv_pref_currency_sign'] = "Dies ist das Währungssymbol das auf dem Rechnungsbeleg erscheint.<br /><br /><b>Hinweis:</b>Euro, Pfund etc. ... bitte verwenden Sie den HTML Code für diese Währungszeichen. Bitte sehen Sie auf der folgenden Liste nach dem entsprechenden Code: <a href='http://www.ascii.cl/htmlcodes.htm'>http://www.ascii.cl/htmlcodes.htm</a>.<br /><br />Der HTML Code wird benötigt damit die PDF Erstellung mit nicht $ Dollarzeichen funktioniert.<br /><br /> Beispiel:  &#38;#163; ist der HTML Code für  Pound,<br /> &#38;#8364; für Euro etc..";//1
+$LANG['help_insert_biller_text'] = "To select no logo please select '_default_blank_logo.png' from the list.<br /><br />To add additional logos into Simple Invoices, copy the logo file into the logo directory at templates/invoices/logos in the Simple Invoices folder.";//1
+$LANG['help_inv_pref_currency_sign'] = "Dies ist das Währungssymbol das auf dem Rechnungsbeleg erscheint.<br /><br /><b>Hinweis:</b>Euro, Pfund etc. ... bitte verwenden Sie den HTML Code für diese Währungszeichen. Bitte sehen Sie auf der folgenden Liste nach dem entsprechenden Code: <a href='http://www.ascii.cl/htmlcodes.htm'>http://www.ascii.cl/htmlcodes.htm</a>.<br /><br />Der HTML Code wird benötigt damit die PDF Erstellung mit nicht \$ Dollarzeichen funktioniert.<br /><br /> Beispiel:  &#38;#163; ist der HTML Code für  Pound,<br /> &#38;#8364; für Euro etc..";//1
 $LANG['help_inv_pref_description'] = "Präferenzbezeichnung - diese wird nicht auf der Rechnung verwendet sondern dient lediglich zur Auswahl bei der Rechnungserstellung. Dieser Name erscheint später in der Auswahlliste.";//1
 $LANG['help_inv_pref_invoice_detail_heading'] = "Dies wird als Überschrift des Fußbereichs des Belegs erscheinen.";//1
 $LANG['help_inv_pref_invoice_detail_line'] = "Dies ist der Text der in den Fußnoten erscheint. Gebräuchlich um die Zahlungsbedingungen etc. mitzuteilen";//1
@@ -425,7 +426,7 @@ $LANG['product_attributes'] = "Produkt Attribute";//1
 $LANG['product_description'] = "Produkt Beschreibung";//1
 $LANG['product_description_prompt'] = "Sie müssen eine Beschreibung für das Produkt eingeben";//1
 $LANG['product_edit'] = "Produkt bearbeiten";//1
-$LANG['product_enabled'] = "Produkt aktiv";//1
+$LANG['product_enabled'] = "Produkt aktiviert";//1
 $LANG['product_id'] = "Produkt ID";//1
 $LANG['product_sales'] = "Produktverkäufe";//1
 $LANG['product_to_add'] = "Produkt hinzufügen";//1
@@ -507,7 +508,7 @@ $LANG['setup_add_taxrate'] = "Eine Steuerrate hinzufügen, klicken";//1
 $LANG['setup_as_biller'] = "Sich selbst als Gläubiger einstellen, klicken";//1
 $LANG['setup_create_invoices'] = "Rechnungen erstellen, klicken";//1
 $LANG['setup_customisation'] = "Wenn sie die Präferenzen (z. B. Sprache, Standardoptionen usw.) anpassen möchten, klicken ";//1
-$LANG['shortcut'] ="Schnellzugriffsmenü";//1
+$LANG['shortcut'] = "Schnellzugriffsmenü";//1
 $LANG['show_details'] = "Details anzeigen";//1
 $LANG['show_only_unpaid_invoices'] = "Nur unbezahlte Rechnungen anzeigen";//1
 $LANG['simple_invoices'] = "Simple Invoices";//1
@@ -520,12 +521,12 @@ $LANG['statement'] = "Bericht";//1
 $LANG['statement_for_the_period'] = "Quartalsbericht";//1
 $LANG['statement_of_invoices'] = "Rechnungsbericht";//1
 $LANG['statement_summary'] = "Zusammenfassungsbericht ";//1
-$LANG['statements'] = "Berichte";//1
-$LANG['stats'] ="Schnellberichte";//1
-$LANG['stats_biller'] ="Top Gläubiger - nach Rechnungssumme";//1
-$LANG['stats_customer'] ="Top Kunde - nach Rechnungssumme";//1
-$LANG['stats_debtor'] ="Grö&szlig;ter Schuldner";//1
-$LANG['status'] ="Status";//1
+$LANG['statements'] =  "Berichte";//1
+$LANG['stats'] = "Schnellberichte";//1
+$LANG['stats_biller'] = "Top Gläubiger - nach Rechnungssumme";//1
+$LANG['stats_customer'] = "Top Kunde - nach Rechnungssumme";//1
+$LANG['stats_debtor'] = "Grösster Schuldner";//1
+$LANG['status'] = "Status";//1
 $LANG['street'] = "Strasse";//1
 $LANG['street2'] = "Strasse 2";//1
 $LANG['sub_total'] = "Zwischensumme";//1
@@ -556,7 +557,7 @@ $LANG['total'] = "Gesamtsumme";//1
 $LANG['total_amount'] = "Rechnungsbetrag";//1
 $LANG['total_by_aging_periods'] = "Nach Zahlungsdauer - Gesamt";//1
 $LANG['total_invoices'] = "Rechnungen gesamt";//1
-$LANG['total_owed'] = "Total Schulden";//1
+$LANG['total_owed'] = "Gesamtschulden";//1
 $LANG['total_owed_per_customer'] = "Offener Rechnungsbetrag je Kunde - Gesamt";//1
 $LANG['total_owing'] = "Schuldend gesamt";//1
 $LANG['total_paid'] = "Bezahlt gesamt";//1

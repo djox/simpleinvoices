@@ -5,13 +5,13 @@
 * 	French translation file
 *
 * Authors:
-*	 Catherine, Lionel
+*	Catherine, Lionel
 *
 * Last Edited:
-* 2014-06-09
+*	2016-10-04
 *
 * License:
-*	 GPL v3 or above
+*	GPL v3 or above
 */
 
 /*// 1 means that the variable has been translated and // zero means it hasnt been translated - this is used by a script to calculate how much of each file has been done
@@ -47,7 +47,7 @@ $LANG['address_zip'] = "Code Postal";//1
 $LANG['age'] = "Depuis";//1
 $LANG['aging'] = "Depuis";//1
 $LANG['all'] = "Tout";//1
-$LANG['all_reports'] = "Tout les rapports";//1
+$LANG['all_reports'] = "Tous les rapports";//1
 $LANG['amount'] = "Total";//1
 $LANG['as_template'] = "comme mod&egrave;le";//1
 $LANG['attention_short'] = "Attn.";//1
@@ -60,7 +60,7 @@ $LANG['backup_done'] = "Votre base a &eacute;t&eacute; sauvegard&eacute;e jusqu'
 $LANG['backup_howto'] = "Pour sauvegarder  votre base de donn&eacute;ees Simple Invoices database cliquer ci-dessous";//1
 $LANG['backup_note_to_file'] = "Ceci sauvegardera votre base de donn&eacute;ees dans le r&eacute;epertoire  database_backups directory.";//1
 $LANG['backup_your_database'] = "Sauvegarder votre base de donn&eacute;es";//1
-$LANG['before_starting'] = "There are just a couple of things to do before you can start invoicing";//0
+$LANG['before_starting'] = "Il vous reste juste quelques trucs &aacute; faire avant de pouvoir commencer &aacute; facturer";//1
 $LANG['biller'] = "Vendeur";//1
 $LANG['biller_details'] = "D&eacute;tails vendeur";//1
 $LANG['biller_edit'] = "&Eacute;diter vendeur";//1
@@ -73,7 +73,7 @@ $LANG['biller_to_add'] = "Vendeur à ajouter";//1
 $LANG['billers'] = "Vendeurs";//1
 $LANG['blog'] = "Blog";//0
 $LANG['cancel'] = "Annuler";//1
-$LANG['cannot_delete_first_row'] = "La première ligne ne peut pas être supprimé";//1
+$LANG['cannot_delete_first_row'] = "La première ligne ne peut pas être supprimée";//1
 $LANG['change_log'] = "Journal des modifications";//1
 $LANG['city'] = "Ville";//1
 $LANG['confirm_delete'] = "Êtes-vous sûr que vous voulez supprimer";//1
@@ -87,7 +87,7 @@ $LANG['credit_card_expiry_month'] = "Mois d'expiration de la carte de crédit";/
 $LANG['credit_card_expiry_year'] = "Année d'expiration de la carte de crédit";//1
 $LANG['credit_card_holder_name'] = "Nom du titulaire de la carte de crédit";//1
 $LANG['credit_card_number'] = "Numéro de la carte de crédit";//1
-$LANG['credit_card_number_encrypted'] = "Le numéro de carte de crédit a été chiffrée et n'est pas affiché dans Simple Invoices";//1
+$LANG['credit_card_number_encrypted'] = "Le numéro de carte de crédit a été chiffré et n'est pas affiché dans Simple Invoices";//1
 $LANG['credit_card_number_new'] = "Nouveau numéro de la carte de crédit";//1
 $LANG['credits'] = "Cr&eacute;dits";//1
 $LANG['currency_code'] = "Code de la devise";//1
@@ -106,6 +106,7 @@ $LANG['customer'] = "Destinataire";//1
 $LANG['customer_account'] = "Compte client";//1
 $LANG['customer_add'] = "Nouveau client";//1
 $LANG['customer_contact'] = "Contact client (Attn)";//1
+$LANG['customer_department'] = "Département";//1
 $LANG['customer_details'] = "Coordonn&eacute;s client";//1
 $LANG['customer_edit'] = "&Eacute;diter client";//1
 $LANG['customer_id'] = "ID client";//1
@@ -135,8 +136,8 @@ $LANG['default_number_items'] = "Nombre d'items par d&eacute;faut:";//1
 $LANG['default_payment_type'] = "Type de paiement par d&eacute;faut";//1
 $LANG['default_tax'] = "Taxe par d&eacute;faut";//1
 $LANG['delete'] = "Effacer";//1
-$LANG['delete_has_payments1'] = "can not be deleted as it has payments of";//0
-$LANG['delete_has_payments2'] = "recorded against it";//0
+$LANG['delete_has_payments1'] = "ne peut pas être supprimé, car il a de paiements";//1
+$LANG['delete_has_payments2'] = "enregistré contre elle";//1
 $LANG['delete_line_item'] = "Supprimer cette ligne";//1
 $LANG['delete_row'] = "Supprimer cette ligne";//1
 $LANG['deleted'] = "a été supprimé";//1
@@ -194,7 +195,7 @@ $LANG['format_tooltip'] = "format";//1
 $LANG['forum'] = "Forum";//0
 $LANG['free'] = "Gratuit";//1
 $LANG['from'] = "De";//1
-$LANG['fwrite_error'] = "Aves vous eu des erreurs 'fwrite'?";//1
+$LANG['fwrite_error'] = "Avez-vous eu des erreurs 'fwrite'?";//1
 $LANG['get_help'] = "Aide";//1
 $LANG['getting_started'] = "Prise en main";//1
 $LANG['gross_total'] = "Prix HT";//1
@@ -210,14 +211,14 @@ $LANG['help_currency_code'] = "Le symbole monétaire est une abréviation de 3 l
 $LANG['help_custom_fields'] = "This field is a 'Custom Field'. This means that the label can be defined as whatever you want (ie. Barcode, Tax number, MSN, etc...). <br /><br />To edit or view existing 'Custom Fields' please select the Custom Fields option from the Options menu.";//0
 $LANG['help_customer_contact'] = "The 'Attn.' or Customer Contact field allow you to specify a contact within your customers business.<br /><br />This is usefull if you customer has many employees and you need to directly specify on the invoice who within your customers business this invoice is for.<br /><br /> ie. Within the customer 'Springfield Power Plant'  you may want to specify Mr Burns (or Smithers) as the customer contact as they are the person who gets the invoice.<br /><br />So an Invoice will look like <br /><br />Customer: Springfield Power Plant<br />Attn.: Mr Burns<br />";//0
 $LANG['help_database_patches'] = "<b>Database patches need to be applied</b><br />There are database patches that need to be applied, please select 'Database Upgrade Manager' from the Options menu and follow the instructions.<br /><br />The 'Database Upgrade Manager' is how Simple Invocies manages modification to the structure of the Simple Invoices database. With each new release there may be 'Database patches' that need to be applied. Database Upgrade Manage looks after these database patches.<br /><br />Database patches are individual modifications to the Simple Invoices database. With a new release there may be multiple patches that need to be applied.";//0
-$LANG['help_default_invoice_template_text'] = "<b>Note</b><br />The value you enter into the detault invoice template MUST be the actual folder name of the template you wish to select.  The invoice templates folders are located in (./templates/invoices/)<br /><br />";//0
+$LANG['help_default_invoice_template_text'] = "<b>Note</b><br />The value you enter into the default invoice template MUST be the actual folder name of the template you wish to select.  The invoice templates folders are located in (./templates/invoices/)<br /><br />";//0
 $LANG['help_delete'] = "By enabling Delete, you will be able to delete any invoices you no longer want via the Quick View of that invoice.<br /><br />To delete an invoice, enable this option, then go to the Manage Invoice page and select the Quick View for the invoice you wish to delete.  In the Quick View screen there will now be a delete option in the actions menu.  Click this button and follow the prompts - Your invoice will now be deleted.<br /><br />Note: Currently only invoices can be deleted, but in the near future this will be extended to all the other sections (ie. billers, customers, etc..)";//0
 $LANG['help_email_bcc'] = "This field is not mandatory and gets the default value from the Billers email address.<br /><br />It's recommended that you BCC yourself onto this email so that you also get a copy of it.  This way you know for sure that the email has been correctly sent and you always have a backup copy of the email.<br /><br /><i>Note: You can add multiple email addresses here - just use eith , or ; to split the addresses</i>";//0
 $LANG['help_email_cc'] = "This field is not mandatory.  Here you can specify any email address you want to CC but cannot add more than 1 email address in this field<br /><br /><i>Note: You can add multiple email addresses here - just use eith , or ; to split the addresses</i>";//0
 $LANG['help_email_from'] = "This field is a mandatory field and gets the default value from the Billers email address.  You can change this email address as you require but cannot add more than 1 email address in this field<br /><br /><i>Note: There can be only 1 email address in this field</i>";//0
 $LANG['help_email_to'] = "This field is a mandatory field and gets the default value from the Customers email address.  You can change this email address as you require<br /><br /><i>Note: You can add multiple email addresses here - just use either , or ; to split the addresses</i>";//0
-$LANG['help_insert_biller_text'] = "To select no logo please select '_default_blank_logo.png' from the list.<br /><br />To add additional logos into Simple Invoices, copy the logo file into the logo directory in the Simple Invoices folder.";//0
-$LANG['help_inv_pref_currency_sign'] = "This is the curreny symbol that will be used through-out the invoice. <br /><br /><b>Note:</b> Euro, Pound etc.. please use the html code for you currency sign in this field.  Refer to the list of html codes on the following website for your non $ currency sign <a href='http://www.ascii.cl/htmlcodes.htm'>http://www.ascii.cl/htmlcodes.htm</a>.  <br /><br />This is required so that PDF can work correctly with non $ symbols<br /><br /> &#38;#163; is the html code for the Pound,<br /> &#38;#8364; for the Euro, etc..";//0
+$LANG['help_insert_biller_text'] = "To select no logo please select '_default_blank_logo.png' from the list.<br /><br />To add additional logos into Simple Invoices, copy the logo file into the logo directory at templates/invoices/logos in the Simple Invoices folder.";//0
+$LANG['help_inv_pref_currency_sign'] = "This is the curreny symbol that will be used through-out the invoice. <br /><br /><b>Note:</b> Euro, Pound etc.. please use the html code for your currency sign in this field.  Refer to the list of html codes on the following website for your non \$ currency sign <a href='http://www.ascii.cl/htmlcodes.htm'>http://www.ascii.cl/htmlcodes.htm</a>.  <br /><br />This is required so that PDF can work correctly with non \$ symbols<br /><br /> &#38;#163; is the html code for the Pound,<br /> &#38;#8364; for the Euro, etc..";//0
 $LANG['help_inv_pref_description'] = "This is the name of the set of preference - it's not used on the invoice itself, just in the creation of the invoice when you select from the drop down list which Invoice Preference you wish to use.";//0
 $LANG['help_inv_pref_invoice_detail_heading'] = "This is what will appear as the heading of the footer/details section of the invoice.";//0
 $LANG['help_inv_pref_invoice_detail_line'] = "This is the text that appear under the details/footer heading. Normally used to define payment terms etc.";//0
@@ -253,7 +254,7 @@ $LANG['help_tax_rate_sign'] = "A tax can be either a percentage based (ie. Sales
 $LANG['help_text'] = "<b>Warning</b><br /><br />Please backup your Simple Invoices database before running the database update, just incase anything bad happens.<br /><br />To backup the database, select 'Backup Database' from the Options menu, or use phpMyAdmin(if you have this installed) to back up the database.";//0
 $LANG['help_user_role'] = "There are 3 roles available <br /><br />Administrator:<br />which has access to all of Simple Invoices<br /><br />User:<br />which has read/write acess to all of Simple Invoices but with no access to the Settings menu <br /><br />Viewer:<br />which has read-only version of User.";//0
 $LANG['help_what_are_custom_fields'] = "Custom Fields are special fields in billers, products, customers, and invoices that you can label as whatever you want.<br /><br />Wish there was a Tax ID field in biller, just go to the Custom Fields page and define one of the blank Biller Custom Fields as Tax ID.<br /><br />Now when you go to edit a Biller there'll be a new field there called Tax ID or whatever you specified it as.";//0
-$LANG['help_wheres_the_edit_button'] = "In the Manage Payment screen there is no 'Edit' button. This is to provide a proper 'audit trail' of payments recorded in Simple Invoices.<br /><br />If you've made a mistake with a payment entry the best option is to reverse the entry and entery it again correctly<br /><br />Reverse the entry - what the?<br /> This basically means just doing a negative entry for the same amount as the original entry.<br /><br />ie.<br />If your entered $110<br />but you should've entered $1100<br />to reverse this entry enter -$110 against the same invoice and then enter the correct amount of $1100";//0
+$LANG['help_wheres_the_edit_button'] = "In the Manage Payment screen there is no 'Edit' button. This is to provide a proper 'audit trail' of payments recorded in Simple Invoices.<br /><br />If you've made a mistake with a payment entry the best option is to reverse the entry and entery it again correctly<br /><br />Reverse the entry - what the?<br /> This basically means just doing a negative entry for the same amount as the original entry.<br /><br />ie.<br />If your entered \$110<br />but you should've entered \$1100<br />to reverse this entry enter -$110 against the same invoice and then enter the correct amount of \$1100";//0
 $LANG['hide_details'] = "cacher les d&eacute;tails";//1
 $LANG['home'] = "Sommaire";//1
 $LANG['id'] = "ID";//1
@@ -387,7 +388,7 @@ $LANG['payment_type_method'] = "Type de paiement";//1
 $LANG['payment_type_to_add'] = "Ajouter un type de paiement";//1
 $LANG['payment_types'] = "Type de paiement";//1
 $LANG['payments'] = "Paiements";//1
-$LANG['payments_filtered'] = "Tri des paiements par nРde facture";//1
+$LANG['payments_filtered'] = "Tri des paiements par no de facture";//1
 $LANG['payments_filtered_customer'] = "Filtered by customer";//0
 $LANG['payments_filtered_invoice'] = "Encaisser cette facture";//1
 $LANG['paymentsgateway'] = "PaymentsGateway.com";//0
